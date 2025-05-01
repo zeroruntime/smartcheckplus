@@ -1,13 +1,20 @@
 /* tailwind css */
 
-@tailwind base;
+/* @tailwind base;
 
 @tailwind components;
 
-@tailwind utilities;
+@tailwind utilities; */
 
-/* @import "tailwindcss"; */
+@import "tailwindcss";
+@import "../tailwind/components/simplebar.css";
+@import "../tailwind/utilities/sidebar.css";
+@import "../tailwind/utilities/reboot.css";
+@import "../tailwind/utilities/header.css";
 
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+@import "../../../node_modules/preline/variants.css";
 @config "../../../tailwind.config.js";
 
 @layer components {
@@ -31,6 +38,7 @@
         @apply rounded-2xl border py-2.5 px-7 border-blue-600 text-blue-600 text-sm  text-center;
     }
 }
+
 /* @utility container {
     max-width: theme(maxWidth.7xl);
   }

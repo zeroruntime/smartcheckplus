@@ -304,82 +304,200 @@
 
 				</header>
 				<!--  Header End -->
+
+<div class="max-w-full">
+    <div class="container full-container">
+<!-- Breadcrumb Start -->
+<div class="mb-6 shadow-none card">
+    <div class="p-6 card-body">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h4 class="text-xl font-semibold text-dark dark:text-white">
+                Student Management
+            </h4>
+            <nav class="text-sm" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="font-medium hover:text-primary">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                    </li>
+                    <li class="font-medium text-gray-500 dark:text-gray-400" aria-current="page">
+                        Students
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12">
                 <div class="card">
+                    <!-- Header -->
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                            <h5 class="mb-0 card-title">Student List</h5>
+                            <div class="flex flex-wrap items-center gap-4">
+                                <!-- Search Form -->
+                                <form method="get" class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <input type="text" name="q" value="{{ query }}" placeholder="Search students..."
+                                            class="py-2 pl-10 pr-4 border rounded-md dark:bg-darkborder dark:border-darkborder dark:text-white focus:ring-2 focus:ring-primary focus:outline-none">
+                                        <i class="absolute text-sm text-gray-400 -translate-y-1/2 ti ti-search left-3 top-1/2"></i>
+                                    </div>
+                                    <button type="submit"
+                                        class="px-4 py-2 text-white rounded-md bg-primary hover:bg-primary-dark">
+                                        Search
+                                    </button>
+                                </form>
+
+                                <!-- Student Type Toggle -->
+                                <div class="flex gap-2">
+                                    <a href="?type=regular{% if query %}&q={{ query }}{% endif %}"
+                                       class="px-3 py-1 rounded-md text-sm transition
+                                       {% if student_type == 'regular' %}
+                                       bg-blue-700 text-white
+                                       {% else %}
+                                           bg-gray-200 text-gray-700 dark:bg-darkborder dark:text-white
+                                       {% endif %}">
+                                        Regular
+                                    </a>
+                                    <a href="?type=temporary{% if query %}&q={{ query }}{% endif %}"
+                                       class="px-3 py-1 rounded-md text-sm transition
+                                       {% if student_type == 'temporary' %}
+                                       bg-blue-700 text-white
+                                       {% else %}
+                                           bg-gray-200 text-gray-700 dark:bg-darkborder dark:text-white
+                                       {% endif %}">
+                                        Temporary
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
                     <div class="card-body">
-                        <h6 class="mb-6 text-lg font-semibold text-gray-500">Add Regular Student</h6>
-                        <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
-                            {% csrf_token %}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-border dark:divide-darkborder">
+                                <thead>
+                                    <tr>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Student</th>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">ID</th>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Type</th>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Status</th>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border dark:divide-darkborder">
+                                    {% for student in students %}
+                                    <tr>
+                                        <td class="p-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-4">
+                                                <div class="flex items-center justify-center w-12 h-12 text-xl font-bold text-white bg-blue-700 rounded-full">
+                                                    {{ student.first_name|first }}{{ student.last_name|first }}
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-base font-medium">{{ student.first_name }} {{ student.last_name }}</h6>
+                                                    <p class="text-sm text-dark dark:text-darklink">
+                                                        {{ student.email|default:"No email" }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-sm text-dark dark:text-darklink whitespace-nowrap">
+                                            {{ student.student_id }}
+                                        </td>
+                                        <td class="p-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full
+                                                {% if student_type == 'regular' %}
+                                                    bg-lightprimary text-primary dark:bg-darkprimary dark:text-primary
+                                                {% else %}
+                                                    bg-lightsecondary text-secondary dark:bg-darksecondary dark:text-secondary
+                                                {% endif %}">
+                                                {{ student_type|title }}
+                                            </span>
+                                        </td>
+                                        <td class="p-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-lightsuccess text-success dark:bg-darksuccess dark:text-success">
+                                                <i class="mr-1 text-sm ti ti-circle"></i>
+                                                Active
+                                            </span>
+                                        </td>
+                                        <td class="p-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
+                                                <a href="" class="p-2 rounded-full text-primary hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
+                                                <a href="" class="p-2 rounded-full text-warning hover:bg-gray-100 dark:hover:bg-darkwarning">
+                                                    <i class="ti ti-edit"></i>
+                                                </a>
+                                                <a href="" class="p-2 rounded-full text-error hover:bg-gray-100 dark:hover:bg-darkerror">
+                                                    <i class="ti ti-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                            No students found.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
-                            <!-- Name Section -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="first_name" class="block mb-2 text-sm text-gray-400">First Name *</label>
-                                    <input type="text" id="first_name" name="first_name" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's first name">
-                                </div>
-                                <div>
-                                    <label for="last_name" class="block mb-2 text-sm text-gray-400">Last Name *</label>
-                                    <input type="text" id="last_name" name="last_name" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's last name">
-                                </div>
+                        <!-- Pagination -->
+                        {% if students.paginator.num_pages > 1 %}
+                        <div class="flex flex-col justify-between gap-4 mt-4 md:flex-row md:items-center">
+                            <div class="text-sm text-gray-600 dark:text-gray-300">
+                                Showing page {{ students.number }} of {{ students.paginator.num_pages }}
                             </div>
+                            <div class="flex space-x-1">
+                                {% if students.has_previous %}
+                                    <a href="?page=1&type={{ student_type }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border rounded-md dark:border-darkborder">
+                                        <i class="ti ti-chevrons-left"></i>
+                                    </a>
+                                    <a href="?page={{ students.previous_page_number }}&type={{ student_type }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border rounded-md dark:border-darkborder">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
+                                {% endif %}
 
-                            <!-- Status Section -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="class_status" class="block mb-2 text-sm text-gray-400">Class Status *</label>
-                                    <input type="text" id="class_status" name="class_status" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's class">
-                                </div>
-                                <div>
-                                    <label for="boarding_status" class="block mb-2 text-sm text-gray-400">Boarding Status *</label>
-                                    <select id="boarding_status" name="boarding_status" required
-                                        class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm pe-9 focus:border-blue-500 focus:ring-blue-500">
-                                        <option value="" selected disabled>Select residential status</option>
-                                        <option value="day">Day</option>
-                                        <option value="boarding">Boarding</option>
-                                    </select>
-                                </div>
-                            </div>
+                                {% for num in students.paginator.page_range %}
+                                    {% if students.number == num %}
+                                        <span class="px-3 py-1 text-white rounded-md bg-primary">{{ num }}</span>
+                                    {% elif num > students.number|add:'-3' and num < students.number|add:'3' %}
+                                        <a href="?page={{ num }}&type={{ student_type }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border rounded-md dark:border-darkborder">
+                                            {{ num }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
 
-                            <!-- Year and Photo -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="year_joined" class="block mb-2 text-sm text-gray-400">Year Joined *</label>
-                                    <input type="number" id="year_joined" name="year_joined" min="2000" max="{{ current_year }}"
-                                        value="{{ current_year }}" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0">
-                                </div>
-                                <div>
-                                    <label for="photo" class="block mb-2 text-sm text-gray-400">Student Photo</label>
-                                    <input type="file" id="photo" name="photo" accept="image/*"
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                </div>
+                                {% if students.has_next %}
+                                    <a href="?page={{ students.next_page_number }}&type={{ student_type }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border rounded-md dark:border-darkborder">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                    <a href="?page={{ students.paginator.num_pages }}&type={{ student_type }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-1 border rounded-md dark:border-darkborder">
+                                        <i class="ti ti-chevrons-right"></i>
+                                    </a>
+                                {% endif %}
                             </div>
-
-                            <!-- Additional Notes -->
-                            <div>
-                                <label for="additional_notes" class="block mb-2 text-sm text-gray-400">Additional Notes</label>
-                                <textarea id="additional_notes" name="additional_notes" rows="3"
-                                    class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                    placeholder="Any additional information about the student"></textarea>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="flex justify-end gap-4 mt-4">
-                                <button type="reset" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 py-2.5 px-6 text-base font-medium">
-                                    Reset
-                                </button>
-                                <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 py-2.5 px-6 text-base font-medium">
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 				</main>

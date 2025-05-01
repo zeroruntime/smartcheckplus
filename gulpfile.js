@@ -56,17 +56,17 @@ const paths = {
 // Compile tailwind to CSS
 //**************************//
 
-function tcss() {
-  return (
-    src(paths.src.tailwind)
-      .pipe(postcss([tailwindcss(TD_CONFIG), require("autoprefixer")]))
-      .pipe(concat({ path: "theme.css" }))
-      .pipe(minifyCSS())
-      .pipe(dest(paths.src.css))
-      .pipe(dest(paths.django.css))  // Also output to Django static folder
-      .pipe(browsersync.stream())
-  );
-}
+// function tcss() {
+//   return (
+//     src(paths.src.tailwind)
+//       .pipe(postcss([tailwindcss(TD_CONFIG), require("autoprefixer")]))
+//       .pipe(concat({ path: "theme.css" }))
+//       .pipe(minifyCSS())
+//       .pipe(dest(paths.src.css))
+//       .pipe(dest(paths.django.css))  // Also output to Django static folder
+//       .pipe(browsersync.stream())
+//   );
+// }
 
 //**************************//
 // Process HTML for Django
@@ -305,7 +305,7 @@ function watchTask() {
 
     // Rebuild assets on change (no Browsersync reload)
     watch(paths.src.html, series(djangoTemplates, fixMissedStaticRefs, touchTemplates));
-    watch([paths.src.tailwind, TD_CONFIG], series(tcss));
+    // watch([paths.src.tailwind, TD_CONFIG], series(tcss));
     watch(paths.src.js, series(js));
     watch(paths.src.images, series(images));
     watch(paths.src.fonts, series(fonts));
@@ -314,7 +314,7 @@ function watchTask() {
 // Default Task Preview (Development)
 exports.default = series(
   createDjangoFolders,
-  parallel(tcss, css, js, images, fonts, djangoTemplates),
+  parallel(css, js, images, fonts, djangoTemplates),
   fixMissedStaticRefs,
   browsersyncServe,
   watchTask
@@ -324,14 +324,14 @@ exports.default = series(
 exports.build = series(
   createDjangoFolders,
   cleanDjangoStatic,
-  parallel(tcss, css, js, images, fonts, djangoTemplates),
+  parallel(css, js, images, fonts, djangoTemplates),
   fixMissedStaticRefs,
   copyLibs
 );
 
 // export tasks
 exports.css = css;
-exports.tcss = tcss;
+// exports.tcss = tcss;
 exports.js = js;
 exports.djangoTemplates = djangoTemplates;
 exports.images = images;

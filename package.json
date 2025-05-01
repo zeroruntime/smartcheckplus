@@ -14,14 +14,14 @@
     "@preline/input-number": "^2.0.1",
     "@preline/overlay": "^1.4.0",
     "@preline/tooltip": "^2.0.1",
+    "@tailwindcss/cli": "^4.1.5",
     "apexcharts": "^3.45.1",
     "dropzone": "^6.0.0-beta.2",
     "iconify-icon": "^1.0.8",
     "jquery": "^3.7.0",
-    "preline": "^1.9.0",
+    "preline": "^3.0.1",
     "prismjs": "^1.29.0",
-    "simplebar": "^6.2.5",
-    "tailwindcss": "^3.3.3"
+    "simplebar": "^6.2.5"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.6",
@@ -42,6 +42,7 @@
     "gulp-replace": "1.1.4",
     "gulp-terser": "^2.1.0",
     "gulp-useref": "5.0.0",
-    "postcss": "^8.4.31"
+    "postcss": "^8.4.31",
+    "tailwindcss": "^4.1.5"
   }
 }

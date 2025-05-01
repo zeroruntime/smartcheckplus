@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html   lang="en" >
 
 <head>
 	<!-- Required meta tags -->
@@ -22,9 +22,9 @@
 <body class=" bg-surface">
 	<main>
 		<!--start the project-->
-		<div id="main-wrapper" class=" flex p-5 xl:pr-0 min-h-screen">
+		<div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
 			<aside id="application-sidebar-brand"
-				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300">
+				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300" >
 				<!-- ---------------------------------- -->
 <!-- Start Vertical Layout Sidebar -->
 <!-- ---------------------------------- -->
@@ -189,14 +189,14 @@
 <!-- </aside> -->
 
 			</aside>
-			<div class=" w-full page-wrapper xl:px-6 px-0 ">
+			<div class="w-full px-0 page-wrapper xl:px-6">
 
 				<!-- Main Content -->
-				<main class="h-full  max-w-full">
-					<div class="container full-container p-0 flex flex-col gap-6">
-						<!--  Header Start -->
-						<header class=" bg-white shadow-md rounded-md w-full text-sm py-4 px-6">
-							
+				<main class="h-full max-w-full">
+					<div class="container flex flex-col gap-6 p-0 full-container">
+					<!--  Header Start -->
+				<header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md ">
+					
 
 <!-- ========== HEADER ========== -->
 
@@ -302,89 +302,92 @@
 
   <!-- ========== END HEADER ========== -->
 
-						</header>
-						<!--  Header End -->
-						<div class="card">
-							<div class="card-body">
-										<div
-											class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-6 gap-x-0 lg:gap-y-0 gap-y-6">
-											<div class="flex flex-col gap-6">
-												<h6 class="text-lg text-gray-500 font-semibold">Card</h6>
-												<div class="card overflow-hidden">
-													<div class=" bg-white">
-														<img class="w-full h-auto rounded-t-xl"
-															src="../assets/images/products/product-1.jpg"
-															alt="Image Description">
-														<div class="card-body">
-															<h3 class="text-lg font-medium text-gray-500">
-																Card title
-															</h3>
-															<p class="mt-1 text-sm text-gray-400">
-																Some quick example text to build on the card title and
-																make up the bulk of the card's content.
-															</p>
-															<a href="#" class="text-base inline-block font-semibold hover:bg-blue-700 btn mt-4 py-2.5">Go somewhere</a>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="flex flex-col gap-6">
-												<h6 class="text-lg text-gray-500 font-semibold">Header and footer</h6>
-												<div class="card">
-													<div class="py-4 px-7 ">
-														<p class="mt-1 text-sm text-gray-400">
-															Featured
-														</p>
-													</div>
-													<div class="card-body">
-														<h3 class="text-lg font-medium text-gray-500">
-															Special title treatment
-														</h3>
-														<p class="mt-1 text-sm text-gray-400">
-															With supporting text below as a natural lead-in to
-															additional content.
-														</p>
-														<a href="#" class="text-base inline-block font-semibold hover:bg-blue-700 btn mt-4 py-2.5">Go somewhere</a>
-													</div>
-												</div>
-											</div>
-											<div class="flex flex-col gap-6">
-												<h6 class="text-lg text-gray-500 font-semibold">Titles, text, and links
-												</h6>
-												<div class="card">
-													<div class="card-body">
-														<div class="flex flex-col">
-															<h3 class="text-lg font-medium text-gray-500">
-																Card title
-															</h3>
-															<p
-																class=" text-sm text-gray-400 opacity-80">
-																Card subtitle
-															</p>
-															<p class="mt-2 text-sm text-gray-400">
-																Some quick example text to build on the card title and
-																make up the bulk of the card's content.
-															</p>
-															<div class="flex gap-2">
-																<a class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-700"
-																	href="#">
-																	Card link
-																	<i class="ti ti-chevron-right text-base"></i>
-																</a>
-																<a class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-700"
-																	href="#">
-																	Another link
-																	<i class="ti ti-chevron-right text-base"></i>
-																</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-						</div>
-					</div>
+				</header>
+				<!--  Header End -->
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="mb-6 text-lg font-semibold text-gray-500">Add Temporary Student</h6>
+                        <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
+                            {% csrf_token %}
+
+                            <!-- Name Section -->
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div>
+                                    <label for="first_name" class="block mb-2 text-sm text-gray-400">First Name *</label>
+                                    <input type="text" id="first_name" name="first_name" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                        placeholder="Student's first name">
+                                </div>
+                                <div>
+                                    <label for="last_name" class="block mb-2 text-sm text-gray-400">Last Name *</label>
+                                    <input type="text" id="last_name" name="last_name" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                        placeholder="Student's last name">
+                                </div>
+                            </div>
+
+                            <!-- Status Section -->
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div>
+                                    <label for="class_status" class="block mb-2 text-sm text-gray-400">Class Status *</label>
+                                    <input type="text" id="class_status" name="class_status" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                        placeholder="Student's class">
+                                </div>
+                                <div>
+                                    <label for="boarding_status" class="block mb-2 text-sm text-gray-400">Boarding Status *</label>
+                                    <select id="boarding_status" name="boarding_status" required
+                                        class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm pe-9 focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="" selected disabled>Select boarding status</option>
+                                        <option value="day">Day Scholar</option>
+                                        <option value="boarding">Boarding</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Year and Validity -->
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div>
+                                    <label for="year_joined" class="block mb-2 text-sm text-gray-400">Year Joined *</label>
+                                    <input type="number" id="year_joined" name="year_joined" min="2000" max="{{ current_year }}"
+                                        value="{{ current_year }}" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0">
+                                </div>
+                                <div>
+                                    <label for="valid_until" class="block mb-2 text-sm text-gray-400">Valid Until *</label>
+                                    <input type="date" id="valid_until" name="valid_until" value="{{ default_expiry }}" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0">
+                                </div>
+                            </div>
+
+                            <!-- Reason and Photo -->
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div>
+                                    <label for="reason" class="block mb-2 text-sm text-gray-400">Reason for Temporary Status *</label>
+                                    <input type="text" id="reason" name="reason" required
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                        placeholder="Enter reason for temporary status">
+                                </div>
+
+                                <div>
+                                    <label for="photo" class="block mb-2 text-sm text-gray-400">Student Photo</label>
+                                    <input type="file" id="photo" name="photo" accept="image/*"
+                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="flex justify-end gap-4 mt-4">
+                                <button type="reset" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 py-2.5 px-6 text-base font-medium">
+                                    Reset
+                                </button>
+                                <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 py-2.5 px-6 text-base font-medium">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
 
 				</main>

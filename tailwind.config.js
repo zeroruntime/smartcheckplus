@@ -80,6 +80,6 @@ module.exports = {
       strategy: "base",
     }),
     require("@tailwindcss/typography"),
-    require("preline/plugin"),
+    // require("preline/plugin"),
   ],
 };

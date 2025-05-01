@@ -13,7 +13,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base  flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base  flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "dashboard" %}"
            >
             <i class="text-2xl ti ti-layout-dashboard ps-2"></i> <span>Dashboard</span>
           </a>
@@ -48,7 +48,7 @@
             class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
         >
             <li>
-            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
             </li>
             <li>
             <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
@@ -85,7 +85,7 @@
             <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
             </li>
             <li>
-            <a href="" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
+            <a href="{% url "add_temporary_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
             </li>
             <li>
             <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
