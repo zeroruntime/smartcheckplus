@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRPC SmartCheck - Landing</title>
+	<!-- Required meta tags -->
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon icon-->
+<link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+  rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<!-- Core Css -->
+<link rel="stylesheet" href="{% static "css/theme.css" %}" />
+
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-500 to-gray-700 text-wrap">
+    <div class="container px-4 mx-auto">
+        <nav class="py-6">
+            <div class="flex justify-end space-x-4">
+                <a href="" class="px-4 py-3 font-semibold text-white transition border-2 border-white rounded-lg hover:bg-white/10">
+                    Register
+                </a>
+                <a href="" class="px-8 py-3 font-semibold text-white transition border-2 border-white rounded-lg hover:bg-white/10">
+                    Sign In
+                </a>
+            </div>
+        </nav>
+
+        <main class="flex flex-col items-center justify-center min-h-[80vh] text-center">
+            <img src="{% static 'PRPC-logo.png' %}" alt="" class="w-32 h-32 mb-6">
+            <h1 class="mb-6 text-6xl font-bold text-white">PRPC SmartCheck</h1>
+            <p class="max-w-2xl mb-12 text-xl text-blue-100">
+                Streamline your attendance tracking with QR code scanning. Perfect for club meetings, events, and classes.
+            </p>
+
+            <div class="flex gap-4">
+                <a href="" class="px-8 py-3 font-semibold text-blue-600 transition bg-white rounded-lg hover:bg-blue-100">
+                    Get Started
+                </a>
+                <a href="/login" class="px-8 py-3 font-semibold text-white transition border-2 border-white rounded-lg hover:bg-white/10">
+                    Sign In
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 my-8 text-white md:grid-cols-3">
+                <div class="p-6 rounded-lg bg-white/10 backdrop-blur-sm">
+                    <h3 class="mb-2 text-xl font-semibold">Easy Setup</h3>
+                    <p>Create meetings and add students in minutes</p>
+                </div>
+                <div class="p-6 rounded-lg bg-white/10 backdrop-blur-sm">
+                    <h3 class="mb-2 text-xl font-semibold">QR Scanning</h3>
+                    <p>Quick and efficient attendance tracking</p>
+                </div>
+                <div class="p-6 rounded-lg bg-white/10 backdrop-blur-sm">
+                    <h3 class="mb-2 text-xl font-semibold">Real-time Logs</h3>
+                    <p>Track attendance with instant updates</p>
+                </div>
+            </div>
+            <footer class="my-4 text-white">
+                <p>&copy; 2025 PRPC SmartCheck. All rights reserved.</p>
+                <p>Built by 2025 PRPC Team.</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

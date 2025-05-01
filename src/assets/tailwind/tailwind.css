@@ -1,0 +1,78 @@
+/* tailwind css */
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+/* @import "tailwindcss"; */
+
+@config "../../../tailwind.config.js";
+
+@layer components {
+    .container{
+        @apply max-w-7xl;
+    }
+    .card {
+        @apply relative bg-white rounded-md shadow-md;
+    }
+    .card-body {
+        @apply p-6;
+    }
+    .hs-dropdown-menu{
+        @apply relative bg-white rounded-md shadow-sm;
+    }
+
+    .btn{
+        @apply py-3 text-sm text-center text-white bg-blue-600 rounded-2xl px-7;
+    }
+    .btn-outline-primary{
+        @apply rounded-2xl border py-2.5 px-7 border-blue-600 text-blue-600 text-sm  text-center;
+    }
+}
+/* @utility container {
+    max-width: theme(maxWidth.7xl);
+  }
+
+  @utility card {
+    position: relative;
+    background-color: theme(colors.white);
+    border-radius: theme(borderRadius.md);
+    box-shadow: theme(boxShadow.md);
+  }
+
+  @utility card-body {
+    padding: theme(spacing.6);
+  }
+
+  @utility hs-dropdown-menu {
+    position: relative;
+    background-color: theme(colors.white);
+    border-radius: theme(borderRadius.md);
+    box-shadow: theme(boxShadow.sm);
+  }
+
+  @utility btn {
+    padding-top: theme(spacing.3);
+    padding-bottom: theme(spacing.3);
+    padding-left: theme(spacing.7);
+    padding-right: theme(spacing.7);
+    font-size: theme(fontSize.sm);
+    text-align: center;
+    color: theme(colors.white);
+    background-color: theme(colors.blue.600);
+    border-radius: theme(borderRadius.2xl);
+  }
+
+  @utility btn-outline-primary {
+    padding-top: theme(spacing[2.5]);
+    padding-bottom: theme(spacing[2.5]);
+    padding-left: theme(spacing.7);
+    padding-right: theme(spacing.7);
+    font-size: theme(fontSize.sm);
+    text-align: center;
+    color: theme(colors.blue.600);
+    border: 1px solid theme(colors.blue.600);
+    border-radius: theme(borderRadius.2xl);
+  } */

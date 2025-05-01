@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html   lang="en" dir="ltr" >
+
+<head>
+	@@include("../partials/head.html")
+	<title>Modernize TailwindCSS HTML Admin Template</title>
+</head>
+
+<body class="DEFAULT_THEME ">
+	<main>
+				<!-- Main Content -->
+                <div class="relative flex flex-col items-center justify-center w-full min-h-screen px-4 overflow-hidden radial-gradient g-0">
+
+                    <div class="items-center justify-center w-full max-w-md card lg:flex ">
+                        <div class="w-full card-body">
+                                <a href="../" class="block py-4"><img src="{% static "images/logos/logo-light.svg" %}" alt="" class="mx-auto"/></a>
+                                <p class="mb-4 text-sm text-center text-gray-400">Your Social Campaigns</p>
+                            <!-- form -->
+                            <form method="POST" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                <!-- username -->
+                                <div class="mb-4">
+                                    <label for="username"
+                                    class="block mb-2 text-sm text-gray-400">Username</label>
+                                <input type="text"  id="username" name="username"
+                                    class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0 " aria-describedby="hs-input-helper-text">
+                                </div>
+                                <!-- password -->
+                                <div class="mb-6">
+                                    <label for="password"
+                                    class="block mb-2 text-sm text-gray-400">Password</label>
+                                <input type="password" id="password" name="password"
+                                    class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0 " aria-describedby="hs-input-helper-text">
+                                </div>
+                                <!-- checkbox -->
+                                  <div class="flex justify-between">
+                                    <div class="flex">
+                                        {% comment %} <input type="checkbox" class="shrink-0 mt-0.5 border-gray-200 rounded-[4px] text-blue-600 focus:ring-blue-500 " id="hs-default-checkbox" checked>
+                                        <label for="hs-default-checkbox" class="text-sm text-gray-500 ms-3">Remeber this Device</label> {% endcomment %}
+                                      </div>
+                                        <a href="../" class="text-sm font-semibold text-blue-600 hover:text-blue-700">Forgot Password ?</a>
+                                  </div>
+                                    <!-- button -->
+                                      <div class="grid my-6">
+                                        {% comment %} <a href="../" class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700">Sign In</a> {% endcomment %}
+
+                                     <button type="submit"
+                                      class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700">
+                                      <span>Sign In</span>
+                                  </button>
+                                      </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+			</div>
+		<!--end of project-->
+	</main>
+
+
+	@@include("../partials/scripts.html")
+</body>
+
+</html>
