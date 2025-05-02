@@ -77,7 +77,7 @@
                                 </form>
 
                                 <!-- Student Type Toggle -->
-                                <div class="flex gap-2">
+                                {% comment %} <div class="flex gap-2">
                                     <a href="?type=regular{% if query %}&q={{ query }}{% endif %}"
                                        class="px-3 py-1 rounded-md text-sm transition
                                        {% if student_type == 'regular' %}
@@ -96,7 +96,41 @@
                                        {% endif %}">
                                         Temporary
                                     </a>
+                                </div> {% endcomment %}
+
+                                <div class="flex gap-2">
+                                    <!-- Regular Button -->
+                                    {% if student_type == 'regular' %}
+                                        <span class="px-3 py-1 text-sm text-white bg-blue-700 rounded-md cursor-default">
+                                            Regular
+                                        </span>
+
+                                        <span class="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-md cursor-default">
+                                            Temporary
+                                        </span>
+                                    {% else %}
+                                    <span class="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-md cursor-default">
+                                        Regular
+                                    </span>
+
+                                        <span class="px-3 py-1 text-sm text-white bg-blue-700 rounded-md cursor-default">
+                                            Temporary
+                                        </span>
+                                    {% endif %}
+
+                                    <!-- Temporary Button -->
+                                    {% comment %} {% if student_type == 'temporary' %}
+                                        <span class="px-3 py-1 text-sm text-white bg-blue-700 rounded-md cursor-default">
+                                            Temporary
+                                        </span>
+                                    {% else %}
+                                        <a href="{% url 'student_list' %}?type=temporary{% if query %}&q={{ query }}{% endif %}"
+                                           class="px-3 py-1 text-sm text-gray-700 transition bg-gray-200 rounded-md dark:bg-darkborder dark:text-white hover:bg-gray-300">
+                                            Temporary
+                                        </a>
+                                    {% endif %} {% endcomment %}
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -111,6 +145,7 @@
                                         <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">ID</th>
                                         <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Type</th>
                                         <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Status</th>
+                                        <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">QR</th>
                                         <th class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Actions</th>
                                     </tr>
                                 </thead>
@@ -125,7 +160,7 @@
                                                 <div>
                                                     <h6 class="text-base font-medium">{{ student.first_name }} {{ student.last_name }}</h6>
                                                     <p class="text-sm text-dark dark:text-darklink">
-                                                        {{ student.email|default:"No email" }}
+                                                        {{ student.class_status|default:"Null" }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -151,7 +186,12 @@
                                         </td>
                                         <td class="p-4 whitespace-nowrap">
                                             <div class="flex items-center gap-2">
-                                                <a href="" class="p-2 rounded-full text-primary hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                <img src="{{ student.qr_code.url }}" alt="QR Code" class="h-10">
+                                            </div>
+                                        </td>
+                                        <td class="p-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
+                                                <a href="{% url "student_detail" student.student_id %}" class="p-2 rounded-full text-primary hover:bg-gray-100 dark:hover:bg-darkprimary" >
                                                     <i class="ti ti-eye"></i>
                                                 </a>
                                                 <a href="" class="p-2 rounded-full text-warning hover:bg-gray-100 dark:hover:bg-darkwarning">

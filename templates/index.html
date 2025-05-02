@@ -82,13 +82,13 @@
             class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
         >
             <li>
-            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span> List Students</a>
             </li>
             <li>
-            <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
+            <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Add Student</a>
             </li>
             <li>
-            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Edit Student</a>
             </li>
         </ul>
         </li>
@@ -116,7 +116,7 @@
             class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
         >
             <li>
-            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            <a href="{% url 'student_list' %}?type=temporary{% if query %}&q={{ query }}{% endif %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
             </li>
             <li>
             <a href="{% url "add_temporary_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
@@ -128,12 +128,40 @@
         </li>
 
 
-        <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
-           >
-            <i class="text-2xl ti ti-user-question ps-2"></i> <span>Guests</span>
-          </a>
-        </li>
+        <li class="sidebar-item" x-data="{ open: false }">
+            <!-- Toggle Button -->
+            <button
+                @click="open = !open"
+                class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center justify-between relative rounded-md text-gray-500 w-full transition"
+            >
+                <div class="flex items-center gap-3 text-nowrap">
+                <i class="text-2xl ti ti-user-question ps-2 text-nowrap"></i>
+                <span>Guests</span>
+                </div>
+                <i
+                :class="open ? 'ti ti-chevron-up' : 'ti ti-chevron-down'"
+                class="mr-4 text-2xl transition duration-200">
+                </i>
+            </button>
+
+            <!-- Dropdown Content -->
+            <ul
+                x-show="open"
+                x-transition
+                class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
+            >
+                <li>
+                <a href="{% url 'guest_list' %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Guests</a>
+                </li>
+                <li>
+                <a href="{% url "add_guest" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Guest</a>
+                </li>
+                <li>
+                <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
+                </li>
+            </ul>
+            </li>
+
 
 
         <li class="mt-8 mb-4 text-xs font-bold">
@@ -149,7 +177,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "access_logs" %}"
            >
             <i class="text-2xl ti ti-history ps-2"></i> <span>Logs</span>
           </a>
@@ -169,7 +197,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "system_settings" %}"
            >
             <i class="text-2xl ti ti-settings-2 ps-2"></i> <span>Settings</span>
           </a>
@@ -211,53 +239,36 @@
                 </li>
 
             <li class="relative">
-                
-    <div class="hs-dropdown relative inline-flex [--placement:bottom-left] sm:[--trigger:hover]">
-        <a class="relative hs-dropdown-toggle inline-flex hover:text-gray-500 text-gray-300" href="#">
-            <i class="ti ti-bell-ringing text-xl relative z-[1]"></i>
-            <div
-                class="absolute inline-flex items-center justify-center  text-white text-[11px] font-medium  bg-blue-600 w-2 h-2 rounded-full -top-[1px] -right-[6px]">
-            </div>
-        </a>
-        <div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max  w-[300px] hidden z-[12]"
-            aria-labelledby="hs-dropdown-custom-icon-trigger">
-            <div>
-               <h3 class="text-gray-500 font-semibold text-base px-6 py-3">Notification</h3>
-               <ul class="list-none  flex flex-col">
+                <div class="hs-dropdown relative inline-flex [--placement:bottom-left] sm:[--trigger:hover]">
+    <a class="relative inline-flex text-gray-300 hs-dropdown-toggle hover:text-gray-500" href="#">
+        <i class="ti ti-bell-ringing text-xl relative z-[1]"></i>
+        {% if messages %}
+        <div
+            class="absolute inline-flex items-center justify-center text-white text-[11px] font-medium bg-blue-600 w-2 h-2 rounded-full -top-[1px] -right-[6px]">
+        </div>
+        {% endif %}
+    </a>
+    <div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max w-[300px] hidden z-[12]"
+        aria-labelledby="hs-dropdown-custom-icon-trigger">
+        <div>
+            <h3 class="px-6 py-3 text-base font-semibold text-gray-500">Notifications</h3>
+            <ul class="flex flex-col list-none">
+                {% for message in messages %}
                 <li>
-               <a href="#" class="py-3 px-6 block hover:bg-gray-200">
-                <p class="text-sm text-gray-500 font-medium">Roman Joined the Team!</p>
-                <p class="text-xs text-gray-400 font-medium">Congratulate him</p>
-               </a>
+                    <a href="#" class="flex items-start block gap-2 px-6 py-3 hover:bg-gray-200">
+                        <span class="w-2 h-2 mt-2 bg-gray-400 rounded-full shrink-0"></span>
+                        <p class="text-sm font-medium text-gray-500">{{ message }}</p>
+                    </a>
                 </li>
+                {% empty %}
                 <li>
-                <a href="#" class="py-3 px-6 block hover:bg-gray-200">
-                    <p class="text-sm text-gray-500 font-medium">New message received</p>
-                    <p class="text-xs text-gray-400 font-medium">Salma sent you new message</p>
-                </a>
+                    <div class="px-6 py-3 text-sm text-gray-400">No new notifications</div>
                 </li>
-                <li>
-                  <a href="#" class="py-3 px-6 block hover:bg-gray-200">
-                    <p class="text-sm text-gray-500 font-medium">New Payment received</p>
-                    <p class="text-xs text-gray-400 font-medium">Check your earnings</p>
-                  </a>
-                </li>
-                <li>
-                 <a href="#" class="py-3 px-6 block hover:bg-gray-200">
-                    <p class="text-sm text-gray-500 font-medium">Jolly completed tasks</p>
-                    <p class="text-xs text-gray-400 font-medium">Assign her new tasks</p>
-                 </a>
-                </li>
-                <li>
-                  <a href="#" class="py-3 px-6 block hover:bg-gray-200">
-                    <p class="text-sm text-gray-500 font-medium">Roman Joined the Team!</p>
-                    <p class="text-xs text-gray-400 font-medium">Congratulate him</p>
-                  </a>
-                </li>
-               </ul>
-            </div>
+                {% endfor %}
+            </ul>
         </div>
     </div>
+</div>
 
             </li>
             </ul>
@@ -427,7 +438,7 @@
 									<h4 class="mb-4 text-lg font-semibold text-gray-500">Lab Occupancy</h4>
 									<div class="flex items-center justify-between gap-12">
                                     <div >
-										<h3 class="text-[22px] font-semibold text-gray-500 mb-4">$36,358</h3>
+										<h3 class="text-[22px] font-semibold text-gray-500 mb-4">358</h3>
 										<div class="flex items-center gap-1 mb-3">
                                            <span class="flex items-center justify-center w-5 h-5 bg-teal-400 rounded-full">
 											<i class="text-teal-500 ti ti-arrow-up-left"></i>

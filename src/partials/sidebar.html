@@ -48,13 +48,13 @@
             class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
         >
             <li>
-            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span> List Students</a>
             </li>
             <li>
-            <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
+            <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Add Student</a>
             </li>
             <li>
-            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Edit Student</a>
             </li>
         </ul>
         </li>
@@ -82,7 +82,7 @@
             class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
         >
             <li>
-            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            <a href="{% url 'student_list' %}?type=temporary{% if query %}&q={{ query }}{% endif %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
             </li>
             <li>
             <a href="{% url "add_temporary_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
@@ -94,12 +94,40 @@
         </li>
 
 
-        <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
-           >
-            <i class="text-2xl ti ti-user-question ps-2"></i> <span>Guests</span>
-          </a>
-        </li>
+        <li class="sidebar-item" x-data="{ open: false }">
+            <!-- Toggle Button -->
+            <button
+                @click="open = !open"
+                class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center justify-between relative rounded-md text-gray-500 w-full transition"
+            >
+                <div class="flex items-center gap-3 text-nowrap">
+                <i class="text-2xl ti ti-user-question ps-2 text-nowrap"></i>
+                <span>Guests</span>
+                </div>
+                <i
+                :class="open ? 'ti ti-chevron-up' : 'ti ti-chevron-down'"
+                class="mr-4 text-2xl transition duration-200">
+                </i>
+            </button>
+
+            <!-- Dropdown Content -->
+            <ul
+                x-show="open"
+                x-transition
+                class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
+            >
+                <li>
+                <a href="{% url 'guest_list' %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Guests</a>
+                </li>
+                <li>
+                <a href="{% url "add_guest" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Guest</a>
+                </li>
+                <li>
+                <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
+                </li>
+            </ul>
+            </li>
+
 
 
         <li class="mt-8 mb-4 text-xs font-bold">
@@ -115,7 +143,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "access_logs" %}"
            >
             <i class="text-2xl ti ti-history ps-2"></i> <span>Logs</span>
           </a>
@@ -135,7 +163,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "system_settings" %}"
            >
             <i class="text-2xl ti ti-settings-2 ps-2"></i> <span>Settings</span>
           </a>

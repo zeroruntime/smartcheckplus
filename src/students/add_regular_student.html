@@ -24,6 +24,42 @@
 					@@include("../partials/header.html")
 				</header>
 				<!--  Header End -->
+
+                <!-- Breadcrumb Start -->
+                <div class="mb-6 shadow-none card">
+                    <div class="p-6 card-body">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <h4 class="text-xl font-semibold text-dark dark:text-white">
+                                Student Management
+                            </h4>
+                            <nav class="text-sm" aria-label="Breadcrumb">
+                                <ol class="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
+                                    <li>
+                                        <a href="{% url 'dashboard' %}" class="font-medium hover:text-primary">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                    </li>
+                                    <li class="font-medium text-gray-600 dark:text-gray-300" aria-current="page">
+                                        <a href="{% url 'student_list' %}" class="font-medium hover:text-primary">
+                                            Students
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                    </li>
+                                    <li class="font-medium text-gray-500 dark:text-gray-400" aria-current="page">
+                                    Add Regular Student
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- Breadcrumb End -->
+
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-6 text-lg font-semibold text-gray-500">Add Regular Student</h6>

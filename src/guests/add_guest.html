@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @@include("../partials/head.html")
+    <title>Add Guest - SmartCheck</title>
+</head>
+
+<body class="bg-surface">
+    <main>
+        <div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
+            <aside id="application-sidebar-brand"
+                class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0 w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar transition-all duration-300">
+                @@include("../partials/sidebar.html")
+            </aside>
+            <div class="w-full px-0 page-wrapper xl:px-6">
+                <main class="h-full max-w-full">
+                    <div class="container flex flex-col gap-6 p-0 full-container">
+                        <!-- Header Start -->
+                        <header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md">
+                            @@include("../partials/header.html")
+                        </header>
+                        <!-- Header End -->
+
+                                      <!-- Breadcrumb Start -->
+                <div class="mb-6 shadow-none card">
+                    <div class="p-6 card-body">
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <h4 class="text-xl font-semibold text-dark dark:text-white">
+                                Student Management
+                            </h4>
+                            <nav class="text-sm" aria-label="Breadcrumb">
+                                <ol class="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
+                                    <li>
+                                        <a href="{% url 'dashboard' %}" class="font-medium hover:text-primary">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                    </li>
+                                    <li class="font-medium text-gray-600 dark:text-gray-300" aria-current="page">
+                                        <a href="{% url 'guest_list' %}" class="font-medium hover:text-primary">
+                                            Guest
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                    </li>
+                                    <li class="font-medium text-gray-500 dark:text-gray-400" aria-current="page">
+                                    Add Guest
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- Breadcrumb End -->
+
+                        <div class="card">
+                            <div class="flex flex-col gap-6 card-body">
+                                <h1 class="text-2xl font-semibold text-gray-500">Add New Guest</h1>
+
+                                <!-- Success/Error Messages Placeholder -->
+                                <div id="messages">
+                                    <!-- Django messages will be displayed here -->
+                                </div>
+
+                                <form method="POST" action="{% url 'add_guest' %}">
+                                    {% csrf_token %}
+
+                                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                        <!-- First Name -->
+                                        <div class="mb-4">
+                                            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-700">
+                                                First Name <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="first_name" name="first_name" required
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Enter first name">
+                                        </div>
+
+                                        <!-- Last Name -->
+                                        <div class="mb-4">
+                                            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-700">
+                                                Last Name <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="last_name" name="last_name" required
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Enter last name">
+                                        </div>
+
+                                        <!-- School/Organization -->
+                                        <div class="mb-4">
+                                            <label for="school_or_organization" class="block mb-2 text-sm font-medium text-gray-700">
+                                                School/Organization <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="school_or_organization" name="school_or_organization" required
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Enter school or organization">
+                                        </div>
+
+                                        <!-- Purpose -->
+                                        <div class="mb-4">
+                                            <label for="purpose" class="block mb-2 text-sm font-medium text-gray-700">
+                                                Purpose of Visit <span class="text-red-500">*</span>
+                                            </label>
+                                            <textarea id="purpose" name="purpose" required rows="1"
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Describe the purpose of the visit"></textarea>
+                                        </div>
+
+                                        <!-- Contact Number -->
+                                        <div class="mb-4">
+                                            <label for="contact_number" class="block mb-2 text-sm font-medium text-gray-700">
+                                                Contact Number
+                                            </label>
+                                            <input type="tel" id="contact_number" name="contact_number"
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Enter phone number">
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="mb-4">
+                                            <label for="email" class="block mb-2 text-sm font-medium text-gray-700">
+                                                Email Address
+                                            </label>
+                                            <input type="email" id="email" name="email"
+                                                class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
+                                                placeholder="Enter email address">
+                                            <p class="mt-1 text-xs text-gray-500">We'll use this to send notifications if provided</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Check In Now Option -->
+                                    <div class="flex items-center mt-6 mb-6">
+                                        <input type="checkbox" id="check_in_now" name="check_in_now"
+                                            class="shrink-0 mt-0.5 border-gray-400 rounded-[4px] text-blue-600 focus:ring-blue-500">
+                                        <label for="check_in_now" class="ml-3 text-sm font-medium text-gray-700">
+                                            Check in this guest immediately after registration
+                                        </label>
+                                    </div>
+
+                                    <!-- Form Actions -->
+                                    <div class="flex items-center justify-end gap-4 mt-8">
+                                        <a href="{% url 'guest_list' %}" class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-sm hover:bg-gray-200">
+                                            Cancel
+                                        </a>
+                                        <button type="submit" class="btn text-base py-2.5 text-white font-medium w-fit hover:bg-blue-700">
+                                            Add Guest
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+
+    @@include("../partials/scripts.html")
+</body>
+</html>

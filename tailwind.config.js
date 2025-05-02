@@ -2,12 +2,12 @@
 
 module.exports = {
   darkMode: "class",
-  content: [
-    "./src/**/*.html",     // Original Spike dashboard templates
-    "./templates/**/*.html", // Processed Django templates
-    "./src/**/*.js",       // JavaScript files that might include Tailwind classes
-    "./src/assets/tailwind/**/*.css" // Custom Tailwind components
-  ],
+//   content: [
+//     "./src/**/*.html",     // Original Spike dashboard templates
+//     // "./templates/**/*.html", // Processed Django templates
+//     // "./src/**/*.js",       // JavaScript files that might include Tailwind classes
+//     "./src/assets/tailwind/**/*.css" // Custom Tailwind components
+//   ],
     theme: {
     colors: {
 			blue:{

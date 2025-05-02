@@ -316,117 +316,177 @@
 				</header>
 				<!--  Header End -->
 
-                <!-- Breadcrumb Start -->
-                <div class="mb-6 shadow-none card">
-                    <div class="p-6 card-body">
-                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <h4 class="text-xl font-semibold text-dark dark:text-white">
-                                Student Management
-                            </h4>
-                            <nav class="text-sm" aria-label="Breadcrumb">
-                                <ol class="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-                                    <li>
-                                        <a href="{% url 'dashboard' %}" class="font-medium hover:text-primary">
-                                            Home
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
-                                    </li>
-                                    <li class="font-medium text-gray-600 dark:text-gray-300" aria-current="page">
-                                        <a href="{% url 'student_list' %}" class="font-medium hover:text-primary">
-                                            Students
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
-                                    </li>
-                                    <li class="font-medium text-gray-500 dark:text-gray-400" aria-current="page">
-                                    Add Regular Student
-                                    </li>
-                                </ol>
-                            </nav>
+
+    <div class="max-w-full">
+    <div class="container full-container">
+        <!----Breadcrumb Start---->
+        <div class="mb-6 shadow-none card">
+            <div class="p-6 card-body">
+                <div class="items-center justify-between sm:flex">
+                    <h4 class="text-xl font-semibold text-dark dark:text-white">System Settings</h4>
+                    <ol class="flex items-center" aria-label="Breadcrumb">
+                        <li class="flex items-center">
+                            <a class="text-sm font-medium" href="{% url 'dashboard' %}">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <div class="h-1 w-1 rounded-full bg-bodytext mx-2.5 flex items-center mt-1"></div>
+                        </li>
+                        <li class="flex items-center text-sm font-medium" aria-current="page">
+                            System Settings
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!----Breadcrumb End---->
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Display messages -->
+                    {% if messages %}
+                    <div class="mb-6">
+                        {% for message in messages %}
+                        <div class="px-4 py-3 mb-3 text-sm font-medium rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-12 gap-6">
+                        <!-- School Logo Section -->
+                        <div class="col-span-12 lg:col-span-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">School Logo</h5>
+                                    <p class="card-subtitle">Upload your school's logo</p>
+                                    <div class="text-center">
+                                        {% if settings.school_logo %}
+                                            <img src="{{ settings.school_logo.url }}" class="rounded-full h-[120px] mx-auto mt-6" />
+                                        {% else %}
+                                            <div class="flex items-center justify-center w-32 h-32 mx-auto mt-6 bg-gray-200 rounded-full">
+                                                <i class="text-4xl text-gray-400 ti ti-school"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="flex justify-center gap-3 my-6">
+                                            <input type="file" name="school_logo" id="school_logo" class="hidden" accept="image/*">
+                                            <label for="school_logo" class="cursor-pointer btn btn-md">Upload</label>
+                                            {% if settings.school_logo %}
+                                                <button type="button" onclick="document.getElementById('school_logo').value = '';" class="btn btn-md btn-light-error">Remove</button>
+                                            {% endif %}
+                                        </div>
+                                        <p class="card-subtitle">Allowed JPG, GIF or PNG. Max size of 2MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Settings -->
+                        <div class="col-span-12 lg:col-span-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">QR Code Settings</h5>
+                                    <p class="card-subtitle">Configure QR code behavior</p>
+                                    <div class="flex flex-col gap-4 mt-6">
+                                        <div>
+                                            <label class="block mb-2 font-semibold text-dark dark:text-darklink">
+                                                QR Code Timeout (seconds)
+                                            </label>
+                                            <input type="number" name="qr_code_timeout"
+                                                class="py-2 form-control"
+                                                value="{{ settings.qr_code_timeout }}"
+                                                min="10" max="600">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- School Information -->
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">School Information</h5>
+                                    <p class="card-subtitle">Update your school details</p>
+                                    <div class="grid grid-cols-12 mt-6 gap-x-6 gap-y-4">
+                                        <div class="col-span-12 lg:col-span-6">
+                                            <div class="flex flex-col gap-4">
+                                                <div>
+                                                    <label class="block mb-2 font-semibold text-dark dark:text-darklink">
+                                                        School Name
+                                                    </label>
+                                                    <input type="text" name="school_name"
+                                                        class="py-2 form-control"
+                                                        value="{{ settings.school_name }}"
+                                                        placeholder="Your School Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Access Control Settings -->
+                        <div class="col-span-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Access Control</h5>
+                                    <p class="card-subtitle">Configure system access settings</p>
+                                    <div class="grid grid-cols-12 mt-6 gap-x-6 gap-y-4">
+                                        <div class="col-span-12 lg:col-span-6">
+                                            <div class="flex items-center justify-between p-4 border rounded-lg border-border dark:border-darkborder">
+                                                <div>
+                                                    <label class="block mb-1 font-semibold text-dark dark:text-darklink">
+                                                        Require Supervisor Confirmation
+                                                    </label>
+                                                    <p class="text-sm">Enable to require supervisor approval for access requests</p>
+                                                </div>
+                                                <div class="relative">
+                                                    <input type="checkbox"
+                                                        name="require_supervisor_confirmation"
+                                                        id="require_supervisor_confirmation"
+                                                        class="relative w-[35px] h-[20px] p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-primary disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-primary checked:border-primatext-primary focus:checked:border-primatext-primary dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-4 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-gray-400 dark:checked:before:bg-blue-200"
+                                                        {% if settings.require_supervisor_confirmation %}checked{% endif %}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 lg:col-span-6">
+                                            <div>
+                                                <label class="block mb-2 font-semibold text-dark dark:text-darklink">
+                                                    Temporary Access Maximum Days
+                                                </label>
+                                                <input type="number" name="temporary_access_max_days"
+                                                    class="py-2 form-control"
+                                                    value="{{ settings.temporary_access_max_days }}"
+                                                    min="1" max="365">
+                                                <small class="text-sm">Maximum duration for temporary access in days</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="col-span-12">
+                            <div class="flex justify-end gap-3 mt-2">
+                                <button type="submit" class="btn btn-md">Save Settings</button>
+                                <a href="{% url 'dashboard' %}" class="btn btn-md btn-light-error">Cancel</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Breadcrumb End -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="mb-6 text-lg font-semibold text-gray-500">Add Regular Student</h6>
-                        <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
-                            {% csrf_token %}
-
-                            <!-- Name Section -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="first_name" class="block mb-2 text-sm text-gray-400">First Name *</label>
-                                    <input type="text" id="first_name" name="first_name" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's first name">
-                                </div>
-                                <div>
-                                    <label for="last_name" class="block mb-2 text-sm text-gray-400">Last Name *</label>
-                                    <input type="text" id="last_name" name="last_name" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's last name">
-                                </div>
-                            </div>
-
-                            <!-- Status Section -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="class_status" class="block mb-2 text-sm text-gray-400">Class Status *</label>
-                                    <input type="text" id="class_status" name="class_status" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                        placeholder="Student's class">
-                                </div>
-                                <div>
-                                    <label for="boarding_status" class="block mb-2 text-sm text-gray-400">Boarding Status *</label>
-                                    <select id="boarding_status" name="boarding_status" required
-                                        class="block w-full px-4 py-3 text-sm border-gray-200 rounded-sm pe-9 focus:border-blue-500 focus:ring-blue-500">
-                                        <option value="" selected disabled>Select residential status</option>
-                                        <option value="day">Day</option>
-                                        <option value="boarding">Boarding</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Year and Photo -->
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <div>
-                                    <label for="year_joined" class="block mb-2 text-sm text-gray-400">Year Joined *</label>
-                                    <input type="number" id="year_joined" name="year_joined" min="2000" max="{{ current_year }}"
-                                        value="{{ current_year }}" required
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0">
-                                </div>
-                                <div>
-                                    <label for="photo" class="block mb-2 text-sm text-gray-400">Student Photo</label>
-                                    <input type="file" id="photo" name="photo" accept="image/*"
-                                        class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                </div>
-                            </div>
-
-                            <!-- Additional Notes -->
-                            <div>
-                                <label for="additional_notes" class="block mb-2 text-sm text-gray-400">Additional Notes</label>
-                                <textarea id="additional_notes" name="additional_notes" rows="3"
-                                    class="block w-full px-4 py-3 text-sm text-gray-500 border-gray-200 rounded-sm focus:border-blue-600 focus:ring-0"
-                                    placeholder="Any additional information about the student"></textarea>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div class="flex justify-end gap-4 mt-4">
-                                <button type="reset" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 py-2.5 px-6 text-base font-medium">
-                                    Reset
-                                </button>
-                                <button type="submit" class="btn bg-blue-600 text-white hover:bg-blue-700 py-2.5 px-6 text-base font-medium">
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
 
 
 				</main>
@@ -446,6 +506,38 @@
 <script src="{% static 'libs/@preline/dropdown/index.js' %}"></script>
 <script src="{% static 'libs/@preline/overlay/index.js' %}"></script>
 {% comment %} <script src="{% static "js/sidebarmenu.js" %}"></script> {% endcomment %}
+
+    <script>
+        // Simple JavaScript to show the selected image preview
+        document.getElementById('school_logo').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const previewContainer = document.querySelector('.text-center');
+                    const existingPreview = previewContainer.querySelector('img');
+                    const buttonsContainer = previewContainer.querySelector('.flex.justify-center');
+
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'rounded-full h-[120px] mx-auto mt-6';
+
+                    if (existingPreview) {
+                        // Replace existing preview
+                        existingPreview.src = event.target.result;
+                    } else {
+                        // Insert new preview before the buttons container
+                        if (buttonsContainer) {
+                            previewContainer.insertBefore(img, buttonsContainer);
+                        } else {
+                            // Fallback if buttons container not found
+                            previewContainer.appendChild(img);
+                        }
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+        </script>
 
 
 </body>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html   lang="en" >
+
+<head>
+	@@include("../partials/head.html")
+	<title>Spike TailwindCSS HTML Admin Template</title>
+</head>
+
+<body class=" bg-surface">
+	<main>
+		<!--start the project-->
+		<div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
+			<aside id="application-sidebar-brand"
+				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300" >
+				@@include("../partials/sidebar.html")
+			</aside>
+			<div class="w-full px-0 page-wrapper xl:px-6">
+
+				<!-- Main Content -->
+				<main class="h-full max-w-full">
+					<div class="container flex flex-col gap-6 p-0 full-container">
+					<!--  Header Start -->
+				<header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md ">
+					@@include("../partials/header.html")
+				</header>
+				<!--  Header End -->
+
+                <div class="max-w-full">
+                    <div class="container full-container">
+                        <!----Breadcrumb Start---->
+                        <div class="mb-6 shadow-none card">
+                            <div class="p-6 card-body">
+                                <div class="items-center justify-between sm:flex">
+                                    <h4 class="text-xl font-semibold text-dark dark:text-white">Student Details</h4>
+                                    <ol class="flex items-center" aria-label="Breadcrumb">
+                                        <li class="flex items-center">
+                                            <a class="text-sm font-medium" href="{% url "dashboard" %}">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <a class="text-sm font-medium" href="{% url 'student_list' %}">
+                                                Students
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <span class="mx-2 text-gray-400 dark:text-gray-500">/</span>
+                                        </li>
+                                        <li class="flex items-center text-sm font-medium" aria-current="page">
+                                            {{ student.first_name }} {{ student.last_name }}
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <!----Breadcrumb End---->
+
+                        <div class="student-detail">
+                            <div class="mb-6 shadow-none card dark:border-darkborder">
+                                <div class="card-body">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <!-- Profile Section -->
+                                        <div class="col-span-12 sm:col-span-12 md:col-span-5 lg:col-span-4">
+                                            <div class="p-6 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                                <div class="flex flex-col items-center mb-6">
+                                                    <div class="flex items-center justify-center w-32 h-32 mb-4 bg-blue-600 rounded-full dark:bg-blue-900">
+                                                        <span class="text-4xl text-white dark:text-white">
+                                                            {{ student.first_name|first|upper }}{{ student.last_name|first|upper }}
+                                                        </span>
+                                                    </div>
+                                                    <h3 class="text-xl font-semibold text-center">
+                                                        {{ student.first_name }} {{ student.last_name }}
+                                                    </h3>
+                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                                        ID: {{ student.student_id }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="space-y-4 text-sm">
+                                                    <div>
+                                                        <h6 class="font-medium text-gray-500 dark:text-gray-400">Status</h6>
+                                                        <span class="inline-block px-3 py-1 mt-1 text-white rounded-md text-xs font-semibold w-fit
+                                                            {% if student_type == 'regular' %}bg-teal-500 border border-success{% else %}bg-yellow-500 border border-warning{% endif %}">
+                                                            {{ student_type|title }} Student
+                                                        </span>
+                                                    </div>
+
+                                                    <div>
+                                                        <h6 class="font-medium text-gray-500 dark:text-gray-400">Class</h6>
+                                                        <p class="mt-1">{{ student.class_status|default_if_none:"Not provided" }}</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <h6 class="font-medium text-gray-500 dark:text-gray-400">Residential Status</h6>
+                                                        <p class="mt-1">{{ student.boarding_status|capfirst }}</p>
+                                                    </div>
+
+                                                    {% if student_type == 'regular' %}
+                                                        <div>
+                                                            <h6 class="font-medium text-gray-500 dark:text-gray-400">Additional Notes</h6>
+                                                            <p class="mt-1 text-gray-500">{{ student.additional_notes|default_if_none:"Not specified" }}</p>
+                                                        </div>
+                                                    {% else %}
+                                                        <div>
+                                                            <h6 class="font-medium text-gray-500 dark:text-gray-400">Visit Purpose</h6>
+                                                            <p class="mt-1 text-gray-500">{{ student.reason|default_if_none:"Not specified" }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Details Section -->
+                                        <div class="col-span-12 sm:col-span-12 md:col-span-7 lg:col-span-8">
+                                            <!-- Access History -->
+                                            <div class="mb-6">
+                                                <h4 class="mb-4 text-lg font-semibold">Access History</h4>
+
+                                                {% if logs %}
+                                                <div class="overflow-x-auto border border-gray-200 rounded-lg dark:border-gray-700">
+                                                    <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
+                                                        <thead class="bg-gray-100 dark:bg-gray-800">
+                                                            <tr>
+                                                                <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Date & Time</th>
+                                                                <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Location</th>
+                                                                <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Access Type</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                                                            {% for log in logs %}
+                                                            <tr>
+                                                                <td class="px-6 py-4 whitespace-nowrap">{{ log.timestamp|date:"M d, Y H:i" }}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">{{ log.location|default:"-" }}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                                    <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold
+                                                                        {% if log.access_type == 'entry' %}text-green-800 bg-green-100{% else %}text-red-800 bg-red-100{% endif %}">
+                                                                        {{ log.access_type|title }}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <!-- Pagination -->
+                                                <div class="flex items-center justify-between mt-4 text-sm">
+                                                    <span class="text-gray-500 dark:text-gray-400">
+                                                        Showing page {{ logs.number }} of {{ logs.paginator.num_pages }}
+                                                    </span>
+                                                    <div class="flex gap-1">
+                                                        {% if logs.has_previous %}
+                                                        <a href="?page={{ logs.previous_page_number }}" class="px-3 py-1 text-gray-700 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-200">Previous</a>
+                                                        {% endif %}
+
+                                                        {% for num in logs.paginator.page_range %}
+                                                            {% if logs.number == num %}
+                                                            <span class="px-3 py-1 text-white rounded bg-primary">{{ num }}</span>
+                                                            {% elif num > logs.number|add:'-3' and num < logs.number|add:'3' %}
+                                                            <a href="?page={{ num }}" class="px-3 py-1 text-gray-700 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-200">{{ num }}</a>
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                        {% if logs.has_next %}
+                                                        <a href="?page={{ logs.next_page_number }}" class="px-3 py-1 text-gray-700 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-200">Next</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% else %}
+                                                <div class="p-4 text-center text-gray-500 bg-gray-100 rounded-lg dark:bg-gray-800 dark:text-gray-400">
+                                                    No access records found for this student.
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Actions and Stats -->
+                                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                                <!-- Quick Actions -->
+                                                <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                                    <h5 class="mb-3 text-lg font-semibold">Quick Actions</h5>
+                                                    <div class="space-y-2">
+                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-2xl hover:bg-blue-600">Edit Student Information</a>
+                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-2xl hover:bg-warning-600">Generate Access Report</a>
+                                                        {% if student_type == 'temporary' %}
+                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-2xl hover:bg-red-600">Revoke Access</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Statistics -->
+                                                <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+                                                    <h5 class="mb-3 text-lg font-semibold">Statistics</h5>
+                                                    <div class="space-y-3 text-sm">
+                                                        <div>
+                                                            <p class="text-gray-500 dark:text-gray-400">Total Accesses</p>
+                                                            <p class="text-xl font-semibold">{{ logs.paginator.count }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-gray-500 dark:text-gray-400">Last Access</p>
+                                                            <p class="text-xl font-semibold">
+                                                                {% if logs and logs|length > 0 %}
+                                                                    {{ logs.0.timestamp|timesince }} ago
+                                                                {% else %}
+                                                                    Never
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- End Actions and Stats -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+				</main>
+				<!-- Main Content End -->
+
+			</div>
+		</div>
+		<!--end of project-->
+	</main>
+
+
+	@@include("../partials/scripts.html")
+
+</body>
+
+</html>

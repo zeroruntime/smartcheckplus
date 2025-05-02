@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html   lang="en" >
+
+<head>
+	@@include("../partials/head.html")
+	<title>Spike TailwindCSS HTML Admin Template</title>
+</head>
+
+<body class=" bg-surface">
+	<main>
+		<!--start the project-->
+		<div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
+			<aside id="application-sidebar-brand"
+				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300" >
+				@@include("../partials/sidebar.html")
+			</aside>
+			<div class="w-full px-0 page-wrapper xl:px-6">
+
+				<!-- Main Content -->
+				<main class="h-full max-w-full">
+					<div class="container flex flex-col gap-6 p-0 full-container">
+					<!--  Header Start -->
+				<header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md ">
+					@@include("../partials/header.html")
+				</header>
+				<!--  Header End -->
+
+
+<div class="max-w-full">
+    <div class="container full-container">
+        <!----Breadcrumb Start---->
+        <div class="mb-6 shadow-none card">
+            <div class="p-6 card-body">
+                <div class="items-center justify-between sm:flex">
+                    <h4 class="text-xl font-semibold text-dark dark:text-white">Access Logs</h4>
+                    <ol class="flex items-center" aria-label="Breadcrumb">
+                        <li class="flex items-center">
+                            <a class="text-sm font-medium" href="{% url 'dashboard' %}">Home</a>
+                        </li>
+                        <li>
+                            <div class="h-1 w-1 rounded-full bg-bodytext mx-2.5 flex items-center mt-1"></div>
+                        </li>
+                        <li class="flex items-center text-sm font-medium" aria-current="page">
+                            Access Logs
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!----Breadcrumb End---->
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="flex col-span-12">
+                <div class="card">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h5 class="mb-0 card-title">Access Logs</h5>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <form method="get" class="flex flex-wrap items-center gap-4">
+                            <div class="flex items-center gap-2">
+                                <label for="start_date" class="text-sm font-medium text-gray-700 dark:text-gray-300">From:</label>
+                                <input type="date" id="start_date" name="start_date" value="{{ start_date }}"
+                                    class="p-2 text-sm border rounded-md dark:bg-darkborder dark:border-darkborder">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="end_date" class="text-sm font-medium text-gray-700 dark:text-gray-300">To:</label>
+                                <input type="date" id="end_date" name="end_date" value="{{ end_date }}"
+                                    class="p-2 text-sm border rounded-md dark:bg-darkborder dark:border-darkborder">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="user_type" class="text-sm font-medium text-gray-700 dark:text-gray-300">User Type:</label>
+                                <select id="user_type" name="user_type" class="p-2 text-sm border rounded-md dark:bg-darkborder dark:border-darkborder">
+                                    <option value="">All</option>
+                                    <option value="regular" {% if user_type == 'regular' %}selected{% endif %}>Regular Student</option>
+                                    <option value="temporary" {% if user_type == 'temporary' %}selected{% endif %}>Temporary Student</option>
+                                    <option value="guest" {% if user_type == 'guest' %}selected{% endif %}>Guest</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="log_type" class="text-sm font-medium text-gray-700 dark:text-gray-300">Log Type:</label>
+                                <select id="log_type" name="log_type" class="p-2 text-sm border rounded-md dark:bg-darkborder dark:border-darkborder">
+                                    <option value="">All</option>
+                                    <option value="entry" {% if log_type == 'entry' %}selected{% endif %}>Entry</option>
+                                    <option value="exit" {% if log_type == 'exit' %}selected{% endif %}>Exit</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" name="q" placeholder="Search..." value="{{ query }}"
+                                    class="p-2 text-sm border rounded-md dark:bg-darkborder dark:border-darkborder">
+                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-md cursor-pointer hover:bg-blue-dark">
+                                    Filter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="flex flex-col">
+                            <div class="-m-1.5 overflow-x-auto">
+                                <div class="p-1.5 min-w-full inline-block align-middle">
+                                    <div class="overflow-hidden rounded-md dark:border-darkborder">
+                                        <table class="min-w-full divide-y divide-border dark:divide-darkborder">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Name</th>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">ID</th>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">User Type</th>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Log Type</th>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Timestamp</th>
+                                                    <th scope="col" class="p-4 text-base font-semibold capitalize text-start text-link dark:text-white">Recorded By</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-border dark:divide-darkborder">
+                                                {% for log in logs %}
+                                                <tr>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <div class="flex items-center gap-4">
+                                                            <div class="flex items-center justify-center w-10 h-10 text-xl text-white rounded-full bg-primary">
+                                                                {{ log.get_user_name|slice:":1"|upper }}
+                                                            </div>
+                                                            <div>
+                                                                <h6 class="mb-0 text-base leading-tight">{{ log.get_user_name }}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="p-4 text-sm whitespace-nowrap">
+                                                        <p class="text-base font-light text-dark dark:text-darklink">{{ log.get_user_id|default:"-" }}</p>
+                                                    </td>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full gap-x-1
+                                                            {% if log.user_type == 'regular' %}bg-lightprimary text-primary dark:bg-darkprimary dark:text-primary
+                                                            {% elif log.user_type == 'temporary' %}bg-lightsecondary text-secondary dark:bg-darksecondary dark:text-secondary
+                                                            {% else %}bg-lightsuccess text-success dark:bg-darksuccess dark:text-success{% endif %}">
+                                                            {{ log.get_user_type_display }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full gap-x-1
+                                                            {% if log.log_type == 'entry' %}bg-lightsuccess text-success dark:bg-darksuccess dark:text-success
+                                                            {% else %}bg-lighterror text-error dark:bg-darkerror dark:text-error{% endif %}">
+                                                            {{ log.get_log_type_display }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <h6 class="mb-0 text-base leading-tight">{{ log.timestamp|date:"Y-m-d H:i" }}</h6>
+                                                    </td>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <div class="flex items-center gap-4">
+                                                            <div>
+                                                                <h6 class="mb-0 text-base leading-tight">{{ log.recorded_by.get_full_name|default:log.recorded_by.username }}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                    <td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                                        No access logs found.
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    {% if logs.paginator.num_pages > 1 %}
+                                    <div class="flex items-center justify-between mt-4">
+                                        <div class="text-sm text-gray-700 dark:text-gray-300">
+                                            Showing page {{ logs.number }} of {{ logs.paginator.num_pages }}
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            {% if logs.has_previous %}
+                                                <a href="?page=1{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if user_type %}&user_type={{ user_type }}{% endif %}{% if log_type %}&log_type={{ log_type }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+                                                   class="px-3 py-1 text-sm border rounded-md dark:border-darkborder hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                    First
+                                                </a>
+                                                <a href="?page={{ logs.previous_page_number }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if user_type %}&user_type={{ user_type }}{% endif %}{% if log_type %}&log_type={{ log_type }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+                                                   class="px-3 py-1 text-sm border rounded-md dark:border-darkborder hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                    Previous
+                                                </a>
+                                            {% endif %}
+
+                                            {% for num in logs.paginator.page_range %}
+                                                {% if logs.number == num %}
+                                                    <span class="px-3 py-1 text-sm text-white rounded-md bg-primary">{{ num }}</span>
+                                                {% elif num > logs.number|add:'-3' and num < logs.number|add:'3' %}
+                                                    <a href="?page={{ num }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if user_type %}&user_type={{ user_type }}{% endif %}{% if log_type %}&log_type={{ log_type }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+                                                       class="px-3 py-1 text-sm border rounded-md dark:border-darkborder hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                        {{ num }}
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if logs.has_next %}
+                                                <a href="?page={{ logs.next_page_number }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if user_type %}&user_type={{ user_type }}{% endif %}{% if log_type %}&log_type={{ log_type }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+                                                   class="px-3 py-1 text-sm border rounded-md dark:border-darkborder hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                    Next
+                                                </a>
+                                                <a href="?page={{ logs.paginator.num_pages }}{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if user_type %}&user_type={{ user_type }}{% endif %}{% if log_type %}&log_type={{ log_type }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+                                                   class="px-3 py-1 text-sm border rounded-md dark:border-darkborder hover:bg-gray-100 dark:hover:bg-darkprimary">
+                                                    Last
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+				</main>
+				<!-- Main Content End -->
+
+			</div>
+		</div>
+		<!--end of project-->
+	</main>
+
+
+	@@include("../partials/scripts.html")
+
+</body>
+
+</html>
