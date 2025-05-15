@@ -183,9 +183,12 @@
                                                     <h5 class="mb-3 text-lg font-semibold">Quick Actions</h5>
                                                     <div class="space-y-2">
                                                         <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-2xl hover:bg-blue-600">Edit Student Information</a>
-                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-2xl hover:bg-warning-600">Generate Access Report</a>
+                                                        <a onclick="openModal(this)" data-name="{{ student.last_name }} {{ student.first_name }}"
+                                                        data-id="{{ student.student_id }}" data-class="{{ student.class_status }}"
+                                                        data-status="{{ student.boarding_status }}" data-qrcode="{{ student.qr_code.url }}"
+                                                     class="block px-4 py-2 text-sm font-medium cursor-pointer text-white bg-yellow-500 rounded-2xl hover:bg-warning-600">Generate ID Card</a>
                                                         {% if student_type == 'temporary' %}
-                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-2xl hover:bg-red-600">Revoke Access</a>
+                                                        <a href="#" class="block cursor-pointer px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-2xl hover:bg-red-600">Revoke Access</a>
                                                         {% endif %}
                                                     </div>
                                                 </div>
@@ -217,12 +220,50 @@
                             </div>
                         </div>
 
+ 
+
                     </div>
                 </div>
 
-
+                
+                
 				</main>
 				<!-- Main Content End -->
+                       <!-- Modal -->
+                       <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden backdrop-blur-sm">
+                        <div class="bg-gray-200 p-8 card rounded-lg shadow-lg w-xl relative z-50">
+                            <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 hover:text-black text-2xl">&times;</button>
+                    
+                            <div id="id-card" class="w-full bg-[url(/static/images/1.png)] bg-contain bg-center rounded-lg shadow-2xl p-4 flex flex-col items-center relative">
+                                <!-- Club Logo and Name -->
+                                <div class="w-full flex flex-row justify-between items-center">
+                                    <img src="{% static 'images/logo1.png' %}" alt="Club Logo" class="w-32 h-12">
+                                    <img src="{% static 'images/presec_logo.png' %}" alt="PRESEC" class="w-20 h-26">
+                                </div>
+                    
+                                <h2 class="text-xl text-center font-bold">PRESEC Robotics And Programming Club</h2>
+                                <h2 class="text-xl text-center font-bold">MEMBERSHIP CARD</h2>
+                    
+                                <div class="flex w-full mt-2 mb-2">
+                                    <!-- QR Code on the Left -->
+                                    <div class="bg-transparent w-1/2 flex items-center justify-center">
+                                        <img id="qr-code" src="{% static "STU-001.png" %}" alt="QR Code" class="w-36 h-36">
+                                    </div>
+                    
+                                    <!-- Student Details on the Right -->
+                                    <div class="w-2/3 flex flex-col justify-center pl-4">
+                                        <h2 id="student-name" class="text-xl font-bold text-nowrap">Name: Aforo Amoh Emmanuel</h2>
+                                        <p id="student-id" class="text-xl font-bold">ID: STU-004</p>
+                                        <p id="student-class" class="text-xl font-bold">Class: 3A4</p>
+                                        <p id="boarding-status" class="text-xl font-bold">Residential Status: Day</p>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <!-- Download Button -->
+                            <button onclick="downloadIDCard()" class="mx-auto flex items-center mt-4 px-6 py-2 bg-card border border-grayish text-white cursor-pointer rounded shadow z-50">Download ID</button>
+                        </div>
+                    </div>
 
 			</div>
 		</div>
@@ -231,6 +272,46 @@
 
 
 	@@include("../partials/scripts.html")
+
+    <script>
+        function openModal(button) {
+            document.getElementById("student-name").innerText = "Name: " + button.dataset.name;
+            document.getElementById("student-id").innerText = "ID: " + button.dataset.id;
+            document.getElementById("student-class").innerText = "Class: " + button.dataset.class;
+            document.getElementById("boarding-status").innerText = "Residential Status: " + button.dataset.status;
+            document.getElementById("qr-code").src = button.dataset.qrcode;
+    
+            document.getElementById("modal").classList.remove("hidden");
+        }
+    
+    
+        function closeModal() {
+            document.getElementById("modal").classList.add("hidden");
+        }
+    
+        function downloadIDCard() {
+            // Get student details from the ID card
+            let studentName = document.getElementById("student-name").innerText.trim();
+            let studentID = document.getElementById("student-id").innerText.split(": ")[1].trim(); // Extract ID value
+    
+            // Format filename: Replace spaces with underscores & create filename
+            let fileName = studentName.replace(/\s+/g, "_") + "_" + studentID + ".png";
+    
+            // Capture the ID card and trigger download
+            html2canvas(document.getElementById("id-card"), {
+                backgroundColor: "white",
+                scale: 2
+            }).then(canvas => {
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = fileName; // Set dynamic filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+    
+    </script>
 
 </body>
 

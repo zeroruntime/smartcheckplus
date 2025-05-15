@@ -54,7 +54,8 @@ class BaseStudent(models.Model):
     def generate_student_id(self):
         """Generates a unique student ID based on initials and year."""
         initials = (self.first_name[0] + self.last_name[0]).upper()
-        year = str(self.year_joined)[-2:]
+        init_year = self.year_joined + 3
+        year = str(init_year)[-2:]
         # Get the last student with the same year from all student types
         from .models import RegularStudent, TemporaryStudent
         all_students = list(RegularStudent.objects.filter(year_joined=self.year_joined)) + \
