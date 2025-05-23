@@ -29,7 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]  # Allow all hosts for development purposes
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'http://192.168.0.107:3000',
+    'http://192.168.0.110:3000',
+    'http://192.168.216.149:3000',
 ]
+# CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
 

@@ -51,3 +51,18 @@ $(function () {
     e.preventDefault();
   });
 });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//   // Initialize HS Overlay
+//   HSOverlay.autoInit();
+  
+//   // Mobile sidebar toggle
+//   document.getElementById('headerCollapse').addEventListener('click', function() {
+//     const sidebar = document.getElementById('application-sidebar-brand');
+//     if (sidebar.classList.contains('hidden')) {
+//       sidebar.classList.remove('hidden');
+//     } else {
+//       sidebar.classList.add('hidden');
+//     }
+//   });
+// });

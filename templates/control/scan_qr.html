@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon icon-->
+<link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+  rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<!-- Core Css -->
+<link rel="stylesheet" href="{% static "css/theme.css" %}" />
+
+    <title>QR Code Scanner - SmartCheck</title>
+    <!-- Include the html5-qrcode library -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script> -->
+    <script src="{% static "js/html5-qrcode.min.js" %}"></script>
+</head>
+
+<body class="bg-surface">
+    <main>
+        <div id="main-wrapper" class="flex p-5 xl:pr-0 min-h-screen">
+            <aside id="application-sidebar-brand"
+                class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0 w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar transition-all duration-300">
+                <!-- ---------------------------------- -->
+<!-- Start Vertical Layout Sidebar -->
+<!-- ---------------------------------- -->
+<!-- <aside id="application-sidebar-brand" class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 left-0 bottom-0 z-[60] w-64 bg-white border-r border-gray-200 pt-7 pb-10 overflow-y-auto scrollbar-y lg:block lg:translate-x-0 lg:right-auto lg:bottom-0"></aside> -->
+
+<div class="p-4" >
+  
+  <a href="../" class="text-nowrap">
+    <img
+      src="{% static "images/logos/logo-light.svg" %}"
+      alt="Logo-Dark"
+    />
+  </a>
+
+</div>
+<div class="scroll-sidebar" data-simplebar="">
+    <nav class="flex flex-col w-full px-4 mt-5 sidebar-nav">
+      <ul  id="sidebarnav" class="text-sm text-gray-600">
+        <li class="text-xs font-bold pb-[5px]">
+          <i class="hidden text-lg text-center ti ti-dots nav-small-cap-icon"></i>
+          <span class="text-xs font-semibold text-gray-400">HOME</span>
+        </li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base  flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "dashboard" %}"
+           >
+            <i class="text-2xl ti ti-layout-dashboard ps-2"></i> <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li class="mt-6 mb-4 text-xs font-bold">
+          <i class="hidden text-lg text-center ti ti-dots nav-small-cap-icon"></i>
+          <span class="text-xs font-semibold text-gray-400">USER MANAGEMENT</span>
+        </li>
+
+
+        <li class="sidebar-item" x-data="{ open: false }">
+        <!-- Toggle Button -->
+        <button
+            @click="open = !open"
+            class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center justify-between relative rounded-md text-gray-500 w-full transition"
+        >
+            <div class="flex items-center gap-3">
+            <i class="text-2xl ti ti-user-heart ps-2"></i>
+            <span>Regular Students</span>
+            </div>
+            <i
+            :class="open ? 'ti ti-chevron-up' : 'ti ti-chevron-down'"
+            class="mr-4 text-2xl transition duration-200">
+            </i>
+        </button>
+
+        <!-- Dropdown Content -->
+        <ul
+            x-show="open"
+            x-transition
+            class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
+        >
+            <li>
+            <a href="{% url "student_list" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span> List Students</a>
+            </li>
+            <li>
+            <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Add Student</a>
+            </li>
+            <!-- <li>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Edit Student</a>
+            </li> -->
+        </ul>
+        </li>
+
+        <li class="sidebar-item" x-data="{ open: false }">
+        <!-- Toggle Button -->
+        <button
+            @click="open = !open"
+            class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center justify-between relative rounded-md text-gray-500 w-full transition"
+        >
+            <div class="flex items-center gap-3 text-nowrap">
+            <i class="text-2xl ti ti-user-exclamation ps-2 text-nowrap"></i>
+            <span>Temporary Students</span>
+            </div>
+            <i
+            :class="open ? 'ti ti-chevron-up' : 'ti ti-chevron-down'"
+            class="mr-4 text-2xl transition duration-200">
+            </i>
+        </button>
+
+        <!-- Dropdown Content -->
+        <ul
+            x-show="open"
+            x-transition
+            class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
+        >
+            <li>
+            <a href="{% url 'student_list' %}?type=temporary{% if query %}&q={{ query }}{% endif %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Students</a>
+            </li>
+            <li>
+            <a href="{% url "add_temporary_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
+            </li>
+            <!-- <li>
+            <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
+            </li> -->
+        </ul>
+        </li>
+
+
+        <li class="sidebar-item" x-data="{ open: false }">
+            <!-- Toggle Button -->
+            <button
+                @click="open = !open"
+                class="sidebar-link gap-3 py-2.5 my-1 text-base flex items-center justify-between relative rounded-md text-gray-500 w-full transition"
+            >
+                <div class="flex items-center gap-3 text-nowrap">
+                <i class="text-2xl ti ti-user-question ps-2 text-nowrap"></i>
+                <span>Guests</span>
+                </div>
+                <i
+                :class="open ? 'ti ti-chevron-up' : 'ti ti-chevron-down'"
+                class="mr-4 text-2xl transition duration-200">
+                </i>
+            </button>
+
+            <!-- Dropdown Content -->
+            <ul
+                x-show="open"
+                x-transition
+                class="py-2 pl-4 pr-2 ml-4 space-y-2 text-sm text-gray-400"
+            >
+                <li>
+                <a href="{% url 'guest_list' %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  List Guests</a>
+                </li>
+                <li>
+                <a href="{% url "add_guest" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Guest</a>
+                </li>
+                <!-- <li>
+                <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Guest</a>
+                </li> -->
+            </ul>
+            </li>
+
+
+
+        <li class="mt-8 mb-4 text-xs font-bold">
+          <i class="hidden text-lg text-center ti ti-dots nav-small-cap-icon"></i>
+          <span class="text-xs font-semibold text-gray-400">ACCESS CONTROL</span>
+        </li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "scan_qr_code" %}"
+           >
+            <i class="text-2xl ti ti-scan ps-2"></i> <span>Scan</span>
+          </a>
+        </li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "access_logs" %}"
+           >
+            <i class="text-2xl ti ti-history ps-2"></i> <span>Logs</span>
+          </a>
+        </li>
+
+
+        <li class="mt-8 mb-4 text-xs font-bold">
+          <i class="hidden text-lg text-center ti ti-dots nav-small-cap-icon"></i>
+          <span class="text-xs font-semibold text-gray-400">EXTRA</span>
+        </li>
+
+        <!-- <li class="sidebar-item">
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+           >
+            <i class="text-2xl ti ti-mood-happy ps-2"></i> <span>Icons</span>
+          </a>
+        </li> -->
+
+        <li class="sidebar-item">
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "system_settings" %}"
+           >
+            <i class="text-2xl ti ti-settings-2 ps-2"></i> <span>Settings</span>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+</div>
+
+<!-- Bottom Upgrade Option -->
+<div class="relative grid m-4">
+    <a href="{% url "logout" %}" class="flex items-center justify-center gap-2 text-base font-semibold hover:bg-blue-700 btn">
+        <i class="text-xl ti ti-logout-2"></i>
+        <span>Logout</span>
+    </a>
+</div>
+<!-- </aside> -->
+
+            </aside>
+            <div class="w-full page-wrapper xl:px-6 px-0">
+
+                <!-- Main Content -->
+                <main class="h-full max-w-full">
+                    <div class="container full-container p-0 flex flex-col gap-6">
+                        <!--  Header Start -->
+                        <header class="bg-white shadow-md rounded-md w-full text-sm py-4 px-6">
+                            
+
+<!-- ========== HEADER ========== -->
+
+    <nav class="flex items-center justify-between w-ful" aria-label="Global">
+            <ul class="flex items-center gap-4 icon-nav">
+                <li class="relative xl:hidden">
+                    <a class="text-xl cursor-pointer icon-hover text-heading"
+                        id="headerCollapse" data-hs-overlay="#application-sidebar-brand"
+                        aria-controls="application-sidebar-brand" aria-label="Toggle navigation" href="javascript:void(0)">
+                        <i class="relative ti ti-menu-2 z-1"></i>
+                    </a>
+                </li>
+
+            <li class="relative">
+                <div class="hs-dropdown relative inline-flex [--placement:bottom-left] sm:[--trigger:hover]">
+    <a class="relative inline-flex text-gray-300 hs-dropdown-toggle hover:text-gray-500" href="#">
+        <i class="ti ti-bell-ringing text-xl relative z-[1]"></i>
+        {% if messages %}
+        <div
+            class="absolute inline-flex items-center justify-center text-white text-[11px] font-medium bg-blue-600 w-2 h-2 rounded-full -top-[1px] -right-[6px]">
+        </div>
+        {% endif %}
+    </a>
+    <div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max w-[300px] hidden z-[12]"
+        aria-labelledby="hs-dropdown-custom-icon-trigger">
+        <div>
+            <h3 class="px-6 py-3 text-base font-semibold text-gray-500">Notifications</h3>
+            <ul class="flex flex-col list-none">
+                {% for message in messages %}
+                <li>
+                    <a href="#" class="flex items-start block gap-2 px-6 py-3 hover:bg-gray-200">
+                        <span class="w-2 h-2 mt-2 bg-gray-400 rounded-full shrink-0"></span>
+                        <p class="text-sm font-medium text-gray-500">{{ message }}</p>
+                    </a>
+                </li>
+                {% empty %}
+                <li>
+                    <div class="px-6 py-3 text-sm text-gray-400">No new notifications</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </li>
+            </ul>
+        <div class="flex items-center gap-4">
+            {% if user.is_authenticated  %}
+            <span href="#" class="text-base font-medium" aria-current="page">Welcome, {{ username }}</span>
+            {% endif %}
+            <div class="hs-dropdown relative inline-flex [--placement:bottom-right] sm:[--trigger:hover]">
+    <a class="relative align-middle rounded-full cursor-pointer hs-dropdown-toggle">
+        {% if profile.profile_photo %}
+        <img src="{{ profile.profile_photo.url }}" alt="Profile Photoe" class="object-cover rounded-full w-9 h-9"  aria-hidden="true" />
+    {% else %}
+                    <img alt="Profile Photo" class="object-cover rounded-full w-9 h-9"  aria-hidden="true" src="{% static "images/profile/user-1.jpg" %}" />
+    {% endif %}
+
+    </a>
+    <div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max  w-[200px] hidden z-[12]"
+        aria-labelledby="hs-dropdown-custom-icon-trigger">
+        <div class="p-0 py-2 card-body">
+            <!-- <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
+                <i class="text-xl ti ti-user "></i>
+                <p class="text-sm ">My Profile</p>
+            </a>
+            <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
+                <i class="text-xl ti ti-mail"></i>
+                <p class="text-sm ">My Account</p>
+            </a>
+            <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
+                <i class="text-xl ti ti-list-check "></i>
+                <p class="text-sm ">My Task</p>
+            </a> -->
+            <div class="px-4 mt-[7px] grid">
+                <a href="{% url "logout" %}" class="btn-outline-primary font-medium text-[15px] w-full hover:bg-blue-600 hover:text-white">Logout</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+        </div>
+    </nav>
+
+  <!-- ========== END HEADER ========== -->
+
+                        </header>
+                        <!--  Header End -->
+
+                        <!-- QR Scanner Card -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="text-lg text-gray-700 font-semibold mb-4">QR Code Scanner</h6>
+                                <p class="text-sm text-gray-500 mb-6">Scan student or guest QR codes for lab access tracking</p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Scanner Section -->
+                                    <div class="flex flex-col">
+                                        <div id="reader-container" class="bg-gray-100 rounded-lg p-2 mb-4">
+                                            <div id="reader" class="w-full overflow-hidden rounded-md"></div>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                                            <button id="startButton" class="btn bg-primary text-white hover:bg-primary-600 focus:ring-primary-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                Start Scanner
+                                            </button>
+                                            <button id="stopButton" class="btn bg-gray-500 text-white hover:bg-gray-600 focus:ring-gray-400" disabled>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Stop Scanner
+                                            </button>
+                                            <button id="switchCameraButton" class="btn bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-400">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                                Switch Camera
+                                            </button>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Or upload a QR code image</label>
+                                            <input type="file" id="qrFileInput" accept="image/*" class="block w-full text-sm text-gray-500
+                                                file:mr-4 file:py-2 file:px-4
+                                                file:rounded-md file:border-0
+                                                file:text-sm file:font-semibold
+                                                file:bg-primary file:text-white
+                                                hover:file:bg-primary-600">
+                                        </div>
+                                    </div>
+
+                                    <!-- Results Section -->
+                                    <div class="flex flex-col">
+                                        <div id="scan-result" class="bg-gray-50 rounded-lg p-6 h-full">
+                                            <div id="empty-state" class="flex flex-col items-center justify-center h-64">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                                                </svg>
+                                                <p class="text-gray-400 text-center">Scan a QR code to see results</p>
+                                            </div>
+
+                                            <div id="result-content" class="hidden">
+                                                <div id="result-header" class="flex items-center mb-4">
+                                                    <span id="status-indicator" class="h-4 w-4 rounded-full mr-2 bg-gray-300"></span>
+                                                    <h3 id="result-title" class="text-lg font-medium">Scan Result</h3>
+                                                </div>
+
+                                                <div id="success-result" class="hidden">
+                                                    <div class="flex items-center mb-4">
+                                                        <div id="user-avatar" class="bg-primary-100 text-primary-700 h-12 w-12 flex items-center justify-center rounded-full mr-3">
+                                                            <span id="user-initials" class="text-lg font-bold"></span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 id="user-name" class="font-medium text-gray-800"></h4>
+                                                            <div class="flex items-center text-sm">
+                                                                <span id="user-type-badge" class="px-2 py-0.5 rounded-full text-xs mr-2"></span>
+                                                                <span id="user-id" class="text-gray-500"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="grid grid-cols-2 gap-4 mb-4">
+                                                        <div class="bg-white p-3 rounded-md shadow-sm">
+                                                            <p class="text-xs text-gray-500">Access Type</p>
+                                                            <p id="log-type" class="font-medium"></p>
+                                                        </div>
+                                                        <div class="bg-white p-3 rounded-md shadow-sm">
+                                                            <p class="text-xs text-gray-500">Time</p>
+                                                            <p id="timestamp" class="font-medium"></p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="bg-green-50 text-green-800 p-4 rounded-md">
+                                                        <p id="success-message" class="text-sm"></p>
+                                                    </div>
+                                                </div>
+
+                                                <div id="error-result" class="hidden">
+                                                    <div class="bg-red-50 text-red-800 p-4 rounded-md mb-4">
+                                                        <p id="error-message" class="text-sm"></p>
+                                                    </div>
+
+                                                    <div id="error-user-info" class="bg-white p-4 rounded-md shadow-sm hidden">
+                                                        <h5 class="font-medium mb-2">User Information</h5>
+                                                        <p id="error-user-name" class="text-sm"></p>
+                                                        <p id="error-user-id" class="text-sm text-gray-500"></p>
+                                                        <p id="error-user-type" class="text-sm"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="scan-history" class="mt-6 hidden">
+                                                <h4 class="text-sm font-medium text-gray-700 mb-2">Recent Scans</h4>
+                                                <div id="history-list" class="space-y-2">
+                                                    <!-- History items will be added here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Scanner Card -->
+                    </div>
+                </main>
+                <!-- Main Content End -->
+            </div>
+        </div>
+    </main>
+
+    
+<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+<script src="https://unpkg.com/alpinejs" defer></script>
+<script src="{% static 'libs/simplebar/dist/simplebar.min.js' %}"></script>
+<script src="{% static 'libs/iconify-icon/dist/iconify-icon.min.js' %}"></script>
+<script src="{% static 'libs/@preline/dropdown/index.js' %}"></script>
+<script src="{% static 'libs/@preline/overlay/index.js' %}"></script>
+{% comment %} <script src="{% static "js/sidebarmenu.js" %}"></script> {% endcomment %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Variables
+    const scanEndpoint = "{{ scan_endpoint }}";
+    let html5QrCode;
+    let currentCamera = 'environment'; // 'environment' for back camera, 'user' for front camera
+    let cameraList = [];
+    let currentCameraIndex = 0;
+    let scanHistory = [];
+    
+    // Rest period variables
+    let isProcessing = false;
+    let lastScanTime = 0;
+    const SCAN_COOLDOWN = 6000; // Reduced to 3 seconds for better UX
+    let debugInfo = []; // For mobile debugging
+    let processingTimeout = null; // Failsafe timeout
+    let scanCount = 0; // Track scan attempts
+
+    // DOM elements
+    const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
+    const switchCameraButton = document.getElementById('switchCameraButton');
+    const qrFileInput = document.getElementById('qrFileInput');
+    const emptyState = document.getElementById('empty-state');
+    const resultContent = document.getElementById('result-content');
+    const successResult = document.getElementById('success-result');
+    const errorResult = document.getElementById('error-result');
+    const scanHistoryContainer = document.getElementById('scan-history');
+    const historyList = document.getElementById('history-list');
+    const errorUserInfo = document.getElementById('error-user-info');
+
+    // Initialize QR Scanner
+    function initScanner() {
+        html5QrCode = new Html5Qrcode("reader");
+
+        // Get all cameras
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                cameraList = devices;
+                // Enable start button
+                startButton.disabled = false;
+                addDebugInfo(`Found ${devices.length} cameras`);
+            } else {
+                showError("No camera found on this device");
+            }
+        }).catch(err => {
+            showError(`Error getting cameras: ${err}`);
+        });
+    }
+
+    // Start scanning
+    function startScanning() {
+        const cameraId = cameraList[currentCameraIndex].id;
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            }
+        };
+
+        html5QrCode.start(
+            cameraId,
+            config,
+            onScanSuccess,
+            onScanFailure
+        ).then(() => {
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            // Reset processing state when starting
+            forceResetProcessing();
+            addDebugInfo('Scanner started and processing state reset');
+        }).catch(err => {
+            showError(`Error starting scanner: ${err}`);
+        });
+    }
+
+    // Stop scanning
+    function stopScanning() {
+        html5QrCode.stop().then(() => {
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            // Reset processing state when stopping
+            forceResetProcessing();
+            addDebugInfo('Scanner stopped and processing state reset');
+        }).catch(err => {
+            console.error(`Error stopping scanner: ${err}`);
+        });
+    }
+
+    // Switch camera
+    function switchCamera() {
+        if (cameraList.length <= 1) {
+            showError("Only one camera available");
+            return;
+        }
+
+        if (html5QrCode.isScanning) {
+            html5QrCode.stop().then(() => {
+                currentCameraIndex = (currentCameraIndex + 1) % cameraList.length;
+                startScanning();
+            });
+        } else {
+            currentCameraIndex = (currentCameraIndex + 1) % cameraList.length;
+        }
+    }
+
+    // Handle file input for QR scanning
+    function handleFileInput(event) {
+        if (event.target.files.length === 0) {
+            return;
+        }
+
+        // Check if we're in cooldown period
+        if (isProcessing || (Date.now() - lastScanTime) < SCAN_COOLDOWN) {
+            showCooldownMessage();
+            return;
+        }
+
+        const imageFile = event.target.files[0];
+
+        html5QrCode.scanFile(imageFile, true)
+            .then(decodedText => {
+                onScanSuccess(decodedText);
+            })
+            .catch(err => {
+                showError(`Error scanning file: ${err}`);
+            });
+    }
+
+    // Process successful scan - FIXED VERSION
+    function onScanSuccess(decodedText) {
+        const currentTime = Date.now();
+        const timeSinceLastScan = currentTime - lastScanTime;
+        scanCount++;
+        
+        // Debug info for mobile
+        addDebugInfo(`Scan #${scanCount}: ${decodedText.substring(0, 20)}...`);
+        addDebugInfo(`Is processing: ${isProcessing}`);
+        addDebugInfo(`Time since last scan: ${timeSinceLastScan}ms`);
+        
+        // Check if we're already processing
+        if (isProcessing) {
+            addDebugInfo('BLOCKED: Currently processing another scan');
+            return; // Simply return without showing message to avoid UI spam
+        }
+        
+        // Check cooldown period
+        if (timeSinceLastScan < SCAN_COOLDOWN) {
+            const remaining = Math.ceil((SCAN_COOLDOWN - timeSinceLastScan) / 1000);
+            addDebugInfo(`BLOCKED: Cooldown active, ${remaining}s remaining`);
+            return; // Simply return during cooldown
+        }
+
+        // Play success sound immediately for better UX
+        playSuccessSound();
+        addDebugInfo('Sound played, starting processing...');
+
+        // Set processing flag and update last scan time
+        isProcessing = true;
+        lastScanTime = currentTime;
+
+        // Set a failsafe timeout to reset processing flag after 15 seconds (reduced from 30)
+        if (processingTimeout) {
+            clearTimeout(processingTimeout);
+        }
+        processingTimeout = setTimeout(() => {
+            addDebugInfo('FAILSAFE: Force resetting stuck processing flag after 15s');
+            forceResetProcessing();
+        }, 15000);
+
+        // Process the scan with the backend
+        processScan(decodedText);
+    }
+
+    // Handle scan errors
+    function onScanFailure(error) {
+        // We don't need to show this to the user
+        console.warn(`QR scan error: ${error}`);
+    }
+
+    // Process the scan with backend - IMPROVED VERSION
+    function processScan(qrCode) {
+        // Show loading state
+        showLoading();
+        addDebugInfo('Starting API request...');
+
+        const requestStartTime = Date.now();
+
+        // Create AbortController for better timeout handling
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+        fetch(scanEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: JSON.stringify({
+                qr_code: qrCode
+            }),
+            signal: controller.signal
+        })
+        .then(response => {
+            clearTimeout(timeoutId);
+            const responseTime = Date.now() - requestStartTime;
+            addDebugInfo(`API response received in ${responseTime}ms`);
+            addDebugInfo(`Response status: ${response.status}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return response.json();
+        })
+        .then(data => {
+            addDebugInfo(`API success: ${data.status}`);
+            handleScanResponse(data);
+        })
+        .catch(error => {
+            clearTimeout(timeoutId);
+            addDebugInfo(`API error: ${error.message}`);
+            
+            // Better error handling
+            if (error.name === 'AbortError') {
+                showError('Request timed out - please try again');
+            } else if (error.message.includes('Failed to fetch')) {
+                showError('Network connection error - check your internet');
+            } else {
+                showError(`Error: ${error.message}`);
+            }
+            
+            // Show error in UI
+            displayNetworkError(error.message);
+        })
+        .finally(() => {
+            // Always reset processing flag - this is crucial
+            const wasProcessing = isProcessing;
+            resetProcessingState();
+            addDebugInfo(`Processing flag reset (was: ${wasProcessing}, now: ${isProcessing})`);
+            hideLoading();
+        });
+    }
+
+    // Display network error in UI
+    function displayNetworkError(errorMessage) {
+        emptyState.classList.add('hidden');
+        resultContent.classList.remove('hidden');
+        successResult.classList.add('hidden');
+        errorResult.classList.remove('hidden');
+        
+        // Update status indicator
+        const statusIndicator = document.getElementById('status-indicator');
+        if (statusIndicator) {
+            statusIndicator.className = 'h-4 w-4 rounded-full mr-2 bg-red-500';
+        }
+
+        // Update result title
+        const resultTitle = document.getElementById('result-title');
+        if (resultTitle) {
+            resultTitle.textContent = 'Connection Error';
+        }
+
+        // Update error message
+        const errorMessageElement = document.getElementById('error-message');
+        if (errorMessageElement) {
+            errorMessageElement.textContent = errorMessage;
+        }
+
+        // Hide user info for network errors
+        if (errorUserInfo) {
+            errorUserInfo.classList.add('hidden');
+        }
+    }
+
+    // Handle the scan response
+    function handleScanResponse(data) {
+        // Hide loading state
+        hideLoading();
+
+        // Show the result
+        emptyState.classList.add('hidden');
+        resultContent.classList.remove('hidden');
+
+        if (data.status === 'success') {
+            displaySuccessResult(data);
+            // Add to history
+            addToHistory(data);
+        } else {
+            displayErrorResult(data);
+        }
+    }
+
+    // Display success result
+    function displaySuccessResult(data) {
+        // Show success section, hide error section
+        successResult.classList.remove('hidden');
+        errorResult.classList.add('hidden');
+
+        // Update status indicator
+        const statusIndicator = document.getElementById('status-indicator');
+        statusIndicator.className = 'h-4 w-4 rounded-full mr-2';
+        statusIndicator.classList.add(data.data.log_type === 'entry' ? 'bg-green-500' : 'bg-orange-500');
+
+        // Update result title
+        document.getElementById('result-title').textContent =
+            data.data.log_type === 'entry' ? 'Entry Registered' : 'Exit Registered';
+
+        // Update user info
+        const userName = data.data.user_name;
+        document.getElementById('user-name').textContent = userName;
+
+        // Set user initials
+        const initials = userName.split(' ')
+            .map(name => name[0])
+            .join('')
+            .toUpperCase();
+        document.getElementById('user-initials').textContent = initials;
+
+        // Update user type badge
+        const userTypeBadge = document.getElementById('user-type-badge');
+        userTypeBadge.textContent = capitalizeFirstLetter(data.data.user_type);
+
+        // Set badge color based on user type
+        userTypeBadge.className = 'px-2 py-0.5 rounded-full text-xs mr-2';
+        if (data.data.user_type === 'regular') {
+            userTypeBadge.classList.add('bg-blue-100', 'text-blue-800');
+        } else if (data.data.user_type === 'temporary') {
+            userTypeBadge.classList.add('bg-yellow-100', 'text-yellow-800');
+        } else {
+            userTypeBadge.classList.add('bg-purple-100', 'text-purple-800');
+        }
+
+        // Update user ID
+        document.getElementById('user-id').textContent = `ID: ${data.data.user_id}`;
+
+        // Update log type
+        document.getElementById('log-type').textContent =
+            data.data.log_type === 'entry' ? 'Check-in' : 'Check-out';
+
+        // Update timestamp
+        document.getElementById('timestamp').textContent = formatTime(data.data.timestamp);
+
+        // Update success message
+        document.getElementById('success-message').textContent = data.message;
+    }
+
+    // Display error result
+    function displayErrorResult(data) {
+        // Show error section, hide success section
+        successResult.classList.add('hidden');
+        errorResult.classList.remove('hidden');
+
+        // Update status indicator
+        const statusIndicator = document.getElementById('status-indicator');
+        statusIndicator.className = 'h-4 w-4 rounded-full mr-2 bg-red-500';
+
+        // Update result title
+        document.getElementById('result-title').textContent = 'Access Denied';
+
+        // Update error message
+        document.getElementById('error-message').textContent = data.message;
+
+        // Show user info if available
+        if (data.data && data.data.user_name) {
+            errorUserInfo.classList.remove('hidden');
+            document.getElementById('error-user-name').textContent = data.data.user_name;
+            document.getElementById('error-user-id').textContent = `ID: ${data.data.user_id}`;
+            document.getElementById('error-user-type').textContent =
+                `User Type: ${capitalizeFirstLetter(data.data.user_type)}`;
+        } else {
+            errorUserInfo.classList.add('hidden');
+        }
+    }
+
+    // Add scan to history
+    function addToHistory(data) {
+        if (!data.data) return;
+
+        scanHistory.unshift(data);
+        // Keep only the latest 5 scans
+        if (scanHistory.length > 5) {
+            scanHistory.pop();
+        }
+
+        updateHistoryDisplay();
+    }
+
+    // Update history display
+    function updateHistoryDisplay() {
+        if (scanHistory.length > 0) {
+            scanHistoryContainer.classList.remove('hidden');
+            historyList.innerHTML = '';
+
+            scanHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'p-2 bg-white rounded-md shadow-sm flex items-center justify-between';
+
+                // Create icon and name container
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'flex items-center';
+
+                // Create status icon
+                const statusIcon = document.createElement('span');
+                statusIcon.className = 'h-2 w-2 rounded-full mr-2';
+                if (item.status === 'success') {
+                    statusIcon.classList.add(item.data.log_type === 'entry' ? 'bg-green-500' : 'bg-orange-500');
+                } else {
+                    statusIcon.classList.add('bg-red-500');
+                }
+                nameContainer.appendChild(statusIcon);
+
+                // Create name text
+                const nameText = document.createElement('span');
+                nameText.className = 'text-sm font-medium';
+                nameText.textContent = item.data.user_name || 'Unknown User';
+                nameContainer.appendChild(nameText);
+
+                historyItem.appendChild(nameContainer);
+
+                // Create time
+                const timeElement = document.createElement('span');
+                timeElement.className = 'text-xs text-gray-500';
+                timeElement.textContent = item.data.timestamp ? formatTime(item.data.timestamp) : '';
+                historyItem.appendChild(timeElement);
+
+                historyList.appendChild(historyItem);
+            });
+        }
+    }
+
+    // Helper functions
+    function showLoading() {
+        // Show immediate visual feedback
+        emptyState.classList.add('hidden');
+        resultContent.classList.remove('hidden');
+        
+        // Show a loading indicator
+        successResult.classList.add('hidden');
+        errorResult.classList.add('hidden');
+        
+        addDebugInfo('Showing loading state...');
+    }
+
+    function hideLoading() {
+        addDebugInfo('Hiding loading state...');
+    }
+
+    function showError(message) {
+        addDebugInfo(`ERROR: ${message}`);
+        showTemporaryMessage(message, 'error');
+    }
+
+    function showTemporaryMessage(message, type = 'info') {
+        // Create or update a temporary message div for mobile debugging
+        let messageDiv = document.getElementById('temp-message');
+        if (!messageDiv) {
+            messageDiv = document.createElement('div');
+            messageDiv.id = 'temp-message';
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                z-index: 9999;
+                padding: 10px;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+            `;
+            document.body.appendChild(messageDiv);
+        }
+        
+        // Set color based on type
+        if (type === 'error') {
+            messageDiv.style.backgroundColor = '#fee2e2';
+            messageDiv.style.color = '#dc2626';
+            messageDiv.style.border = '1px solid #fca5a5';
+        } else if (type === 'warning') {
+            messageDiv.style.backgroundColor = '#fef3c7';
+            messageDiv.style.color = '#d97706';
+            messageDiv.style.border = '1px solid #fcd34d';
+        } else {
+            messageDiv.style.backgroundColor = '#dbeafe';
+            messageDiv.style.color = '#2563eb';
+            messageDiv.style.border = '1px solid #93c5fd';
+        }
+        
+        messageDiv.textContent = message;
+        messageDiv.style.display = 'block';
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            if (messageDiv) {
+                messageDiv.style.display = 'none';
+            }
+        }, 3000);
+    }
+
+    function addDebugInfo(info) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugInfo.unshift(`${timestamp}: ${info}`);
+        
+        // Keep only last 30 entries (increased for better debugging)
+        if (debugInfo.length > 30) {
+            debugInfo.pop();
+        }
+        
+        // Update debug display if it exists
+        updateDebugDisplay();
+    }
+
+    function updateDebugDisplay() {
+        let debugDiv = document.getElementById('debug-info');
+        if (!debugDiv) {
+            debugDiv = document.createElement('div');
+            debugDiv.id = 'debug-info';
+            debugDiv.style.cssText = `
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                max-height: 200px;
+                overflow-y: auto;
+                background: rgba(0,0,0,0.9);
+                color: white;
+                padding: 10px;
+                font-size: 11px;
+                border-radius: 5px;
+                z-index: 1000;
+                font-family: monospace;
+            `;
+            document.body.appendChild(debugDiv);
+            
+            // Add toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.textContent = 'Debug';
+            toggleBtn.style.cssText = `
+                position: fixed;
+                bottom: 220px;
+                right: 10px;
+                z-index: 1001;
+                padding: 5px 10px;
+                background: #333;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                font-size: 12px;
+            `;
+            toggleBtn.onclick = () => {
+                debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+            };
+            document.body.appendChild(toggleBtn);
+        }
+        
+        debugDiv.innerHTML = debugInfo.join('<br>');
+    }
+
+    // Helper function to reset processing state
+    function resetProcessingState() {
+        isProcessing = false;
+        if (processingTimeout) {
+            clearTimeout(processingTimeout);
+            processingTimeout = null;
+        }
+    }
+
+    // Force reset function for when things get stuck
+    function forceResetProcessing() {
+        const wasProcessing = isProcessing;
+        resetProcessingState();
+        lastScanTime = 0; // Also reset cooldown
+        addDebugInfo(`FORCE RESET: Processing was ${wasProcessing}, now ${isProcessing}`);
+        showTemporaryMessage('Processing state reset', 'info');
+    }
+
+    function showCooldownMessage() {
+        const remainingTime = Math.ceil((SCAN_COOLDOWN - (Date.now() - lastScanTime)) / 1000);
+        addDebugInfo(`Cooldown: ${remainingTime}s remaining`);
+    }
+
+    function playSuccessSound() {
+        try {
+            // Create a simple beep sound using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800; // Frequency in Hz
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+            
+            addDebugInfo('Success sound played');
+        } catch (error) {
+            addDebugInfo(`Sound error: ${error.message}`);
+        }
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string ? string.charAt(0).toUpperCase() + string.slice(1) : '';
+    }
+
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function getCsrfToken() {
+        // Get CSRF token from cookie
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Event listeners
+    startButton.addEventListener('click', startScanning);
+    stopButton.addEventListener('click', stopScanning);
+    switchCameraButton.addEventListener('click', switchCamera);
+    qrFileInput.addEventListener('change', handleFileInput);
+
+    // Initialize
+    initScanner();
+});
+</script>
+</body>
+
+</html>

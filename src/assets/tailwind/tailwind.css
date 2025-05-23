@@ -39,6 +39,21 @@
     }
 }
 
+/* @media (max-width: 1023px) {
+  #application-sidebar-brand {
+    display: none;
+  }
+  
+  #application-sidebar-brand.hs-overlay-backdrop-open {
+    display: block;
+  }
+  
+  .hs-overlay-backdrop {
+    z-index: 50;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+} */
+
 /* @utility container {
     max-width: theme(maxWidth.7xl);
   }

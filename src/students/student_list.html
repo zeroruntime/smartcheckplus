@@ -178,12 +178,28 @@
                                                 {{ student_type|title }}
                                             </span>
                                         </td>
+                                        {% if student_type == "temporary" %}
                                         <td class="p-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-lightsuccess text-success dark:bg-darksuccess dark:text-success">
-                                                <i class="mr-1 text-sm ti ti-circle"></i>
-                                                Active
-                                            </span>
+                                            {% if student.status == 'Active' %}
+                                                <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-lightsuccess text-success dark:bg-darksuccess dark:text-success">
+                                                    <i class="mr-1 text-sm ti ti-circle"></i>
+                                                    Active
+                                                </span>
+                                            {% else %}
+                                                <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-lightdanger text-danger dark:bg-darkdanger dark:text-danger">
+                                                    <i class="mr-1 text-sm ti ti-circle-off"></i>
+                                                    Expired
+                                                </span>
+                                            {% endif %}
                                         </td>
+                                        {% else %}
+                                        <td class="p-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-lightsuccess text-success dark:bg-darksuccess dark:text-success">
+                                                    <i class="mr-1 text-sm ti ti-circle"></i>
+                                                    Active
+                                                </span>
+                                        </td>
+                                        {% endif %}
                                         <td class="p-4 whitespace-nowrap">
                                             <div class="flex items-center gap-2">
                                                 <img src="{{ student.qr_code.url }}" alt="QR Code" class="h-10">

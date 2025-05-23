@@ -4,6 +4,7 @@
 <head>
 	@@include("../partials/head.html")
 	<title>Spike TailwindCSS HTML Admin Template</title>
+
 </head>
 
 <body class=" bg-surface">
@@ -125,21 +126,22 @@
                                                         <thead class="bg-gray-100 dark:bg-gray-800">
                                                             <tr>
                                                                 <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Date & Time</th>
-                                                                <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Location</th>
                                                                 <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Access Type</th>
+                                                                <th class="px-6 py-3 font-medium tracking-wider text-left text-gray-500 uppercase dark:text-gray-400">Recorded By</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
                                                             {% for log in logs %}
                                                             <tr>
                                                                 <td class="px-6 py-4 whitespace-nowrap">{{ log.timestamp|date:"M d, Y H:i" }}</td>
-                                                                <td class="px-6 py-4 whitespace-nowrap">{{ log.location|default:"-" }}</td>
                                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                                     <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold
-                                                                        {% if log.access_type == 'entry' %}text-green-800 bg-green-100{% else %}text-red-800 bg-red-100{% endif %}">
-                                                                        {{ log.access_type|title }}
+                                                                        {% if log.log_type == 'entry' %}text-green-300 bg-green-100{% else %}text-red-300 bg-red-100{% endif %}">
+                                                                        {{ log.log_type|title }}
                                                                     </span>
                                                                 </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap">{{ log.recorded_by|default:"-" }}</td>
+
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>
@@ -183,7 +185,8 @@
                                                     <h5 class="mb-3 text-lg font-semibold">Quick Actions</h5>
                                                     <div class="space-y-2">
                                                         <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-2xl hover:bg-blue-600">Edit Student Information</a>
-                                                        <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-2xl hover:bg-warning-600">Generate Access Report</a>
+                                                        <button href="#" onclick="openModal(this)" data-name="{{ student.last_name|upper }} {{ student.first_name|upper }}"
+                        data-id="{{ student.student_id }}" data-class="{{ student.class_status|upper }}" data-status="{{ student.boarding_status|upper }}" data-qrcode="{{ student.qr_code.url }}" data-year="{{ student.year_batch }}" class="block px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-2xl hover:bg-warning-600">Generate ID Card</button>
                                                         {% if student_type == 'temporary' %}
                                                         <a href="#" class="block px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-2xl hover:bg-red-600">Revoke Access</a>
                                                         {% endif %}
@@ -224,13 +227,98 @@
 				</main>
 				<!-- Main Content End -->
 
+
+
 			</div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-gray-200 p-8 rounded-xl shadow-lg w-[600px] relative">
+        <button onclick="closeModal()" class="absolute top-2 right-2 text-black text-2xl">&times;</button>
+
+        <div id="id-card" class="bg-[url('/static/images/logos/1.png')] bg-contain bg-center rounded-lg shadow-2xl p-4 flex flex-col items-center relative print:w-[600px] print:h-auto w-full max-w-none">
+            <!-- Logos -->
+            <div class="w-full flex flex-row justify-between items-center ">
+                <img src="{% static 'images/logos/prpclogo.png' %}" alt="Club Logo" class="w-40 h-16">
+                <img src="{% static 'images/logos/presec_logo.png' %}" alt="PRESEC Logo" class="w-20 h-28">
+            </div>
+
+            <!-- Titles -->
+            <h2 class="text-xl font-bold text-center">PRESEC Robotics And Programming Club</h2>
+            <h2 class="text-xl font-bold text-center mb-2">MEMBERSHIP CARD</h2>
+
+            <!-- Content Row -->
+            <div class="flex w-full mt-2 mb-2">
+                <!-- Left Side: QR -->
+                <div class="w-1/2 flex items-center justify-center">
+                    <img id="qr-code" src="{% static 'STU-001.png' %}" alt="QR Code" class="w-36 h-40">
+                </div>
+
+                <!-- Right Side: Details -->
+                <div class="w-1/2 flex flex-col justify-center text-md pl-2 space-y-1">
+                    <p id="student-name" class="font-semibold">Name: Aforo Amoh Emmanuel</p>
+                    <p id="student-id" class="font-semibold">ID: STU-004</p>
+                    <p id="student-batch" class="font-semibold">Year Batch: 2025</p>
+                    <p id="boarding-status" class="font-semibold">Residential Status: Day</p>
+                    <p id="student-class" class="font-semibold">Class: 3A4</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Button -->
+        <button onclick="downloadIDCard()" class="flex mt-4 px-4 py-2 cursor-pointer mx-auto items-center font-medium text-white bg-blue-700 rounded-2xl hover:bg-blue-600">Download ID</button>
+    </div>
+</div>
+
+
 		</div>
 		<!--end of project-->
 	</main>
 
 
 	@@include("../partials/scripts.html")
+    <script src="{% static "js/html2canvas.min.js" %}"></script>
+
+    <script>
+    function openModal(button) {
+        document.getElementById("student-name").innerText = "Name: " + button.dataset.name;
+        document.getElementById("student-id").innerText = "ID: " + button.dataset.id;
+        document.getElementById("student-class").innerText = "Class: " + button.dataset.class;
+        document.getElementById("boarding-status").innerText = "Residential Status: " + button.dataset.status;
+        document.getElementById("student-batch").innerText = "Year Batch: " + button.dataset.year;
+        document.getElementById("qr-code").src = button.dataset.qrcode;
+
+        document.getElementById("modal").classList.remove("hidden");
+    }
+
+
+    function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+    }
+
+    function downloadIDCard() {
+        // Get student details from the ID card
+        let studentName = document.getElementById("student-name").innerText.trim();
+        let studentID = document.getElementById("student-id").innerText.split(": ")[1].trim(); // Extract ID value
+
+        // Format filename: Replace spaces with underscores & create filename
+        let fileName = studentName.replace(/\s+/g, "_") + "_" + studentID + ".png";
+
+        // Capture the ID card and trigger download
+        html2canvas(document.getElementById("id-card"), {
+            backgroundColor: "white",
+            scale: 2
+        }).then(canvas => {
+            let link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = fileName; // Set dynamic filename
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+
+</script>
 
 </body>
 

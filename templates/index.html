@@ -28,6 +28,8 @@
 				<!-- ---------------------------------- -->
 <!-- Start Vertical Layout Sidebar -->
 <!-- ---------------------------------- -->
+<!-- <aside id="application-sidebar-brand" class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 left-0 bottom-0 z-[60] w-64 bg-white border-r border-gray-200 pt-7 pb-10 overflow-y-auto scrollbar-y lg:block lg:translate-x-0 lg:right-auto lg:bottom-0"></aside> -->
+
 <div class="p-4" >
   
   <a href="../" class="text-nowrap">
@@ -87,9 +89,9 @@
             <li>
             <a href="{% url "add_regular_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Add Student</a>
             </li>
-            <li>
+            <!-- <li>
             <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100"><span class="mr-4">&#x2022;</span>  Edit Student</a>
-            </li>
+            </li> -->
         </ul>
         </li>
 
@@ -121,9 +123,9 @@
             <li>
             <a href="{% url "add_temporary_student" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Student</a>
             </li>
-            <li>
+            <!-- <li>
             <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
-            </li>
+            </li> -->
         </ul>
         </li>
 
@@ -156,9 +158,9 @@
                 <li>
                 <a href="{% url "add_guest" %}" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Add Guest</a>
                 </li>
-                <li>
-                <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Student</a>
-                </li>
+                <!-- <li>
+                <a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-100">&#x2022;  Edit Guest</a>
+                </li> -->
             </ul>
             </li>
 
@@ -170,7 +172,7 @@
         </li>
 
         <li class="sidebar-item">
-          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
+          <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "scan_qr_code" %}"
            >
             <i class="text-2xl ti ti-scan ps-2"></i> <span>Scan</span>
           </a>
@@ -189,12 +191,12 @@
           <span class="text-xs font-semibold text-gray-400">EXTRA</span>
         </li>
 
-        <li class="sidebar-item">
+        <!-- <li class="sidebar-item">
           <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href=""
            >
             <i class="text-2xl ti ti-mood-happy ps-2"></i> <span>Icons</span>
           </a>
-        </li>
+        </li> -->
 
         <li class="sidebar-item">
           <a class="sidebar-link gap-3 py-2.5 my-1 text-base   flex items-center relative  rounded-md text-gray-500  w-full" href="{% url "system_settings" %}"
@@ -288,7 +290,7 @@
     <div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max  w-[200px] hidden z-[12]"
         aria-labelledby="hs-dropdown-custom-icon-trigger">
         <div class="p-0 py-2 card-body">
-            <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
+            <!-- <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
                 <i class="text-xl ti ti-user "></i>
                 <p class="text-sm ">My Profile</p>
             </a>
@@ -299,9 +301,9 @@
             <a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-1.5 hover:bg-gray-200 text-gray-400">
                 <i class="text-xl ti ti-list-check "></i>
                 <p class="text-sm ">My Task</p>
-            </a>
+            </a> -->
             <div class="px-4 mt-[7px] grid">
-                <a href="" class="btn-outline-primary font-medium text-[15px] w-full hover:bg-blue-600 hover:text-white">Logout</a>
+                <a href="{% url "logout" %}" class="btn-outline-primary font-medium text-[15px] w-full hover:bg-blue-600 hover:text-white">Logout</a>
             </div>
 
         </div>
@@ -315,84 +317,128 @@
 
 				</header>
 				<!--  Header End -->
+				  
                 <!-- Main Content Start -->
 
                 <!-- Recent Logs & Current Lab Occupants Begin -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-6 gap-x-0 lg:gap-y-0 gap-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-x-6 gap-x-0 lg:gap-y-0 gap-y-6 overflow-x-auto">
                     <div class="card rounded-xl">
                       <div class="card-body">
                       <h4 class="mb-5 text-lg font-semibold text-gray-500">Recent Access Logs</h4>
-                      <ul class="relative timeline-widget">
-                         <li class="timeline-item flex relative overflow-hidden min-h-[70px]">
-                             <div class="timeline-time text-gray-500 min-w-[90px] py-[6px] text-sm pr-4 text-end">
-                                 10:00 am
-                             </div>
-                             <div class="flex flex-col items-center timeline-badge-wrap ">
-                               <div class="timeline-badge w-3 h-3 rounded-full shrink-0 bg-transparent border-2 border-blue-300 my-[10px]">
-                               </div>
-                               <div class="timeline-badge-border block h-full w-[1px] bg-gray-100"></div>
-                             </div>
-                             <div class="timeline-desc py-[6px] px-4 text-sm">
-                              <p class="font-semibold text-gray-500">John Doe entered</p>
-                              <a href="javascript:void('')" class="mt-4 text-blue-600">Regular</a>
-                             </div>
-                         </li>
-
-                         <li class="timeline-item flex relative overflow-hidden min-h-[70px]">
-                             <div class="timeline-time text-gray-500 min-w-[90px] py-[6px] text-sm pr-4 text-end">
-                                 12:00 pm
-                             </div>
-                             <div class="flex flex-col items-center timeline-badge-wrap ">
-                               <div class="timeline-badge w-3 h-3 rounded-full shrink-0 bg-transparent border-2 border-blue-300 my-[10px]">
-                               </div>
-                               <div class="timeline-badge-border block h-full w-[1px] bg-gray-100"></div>
-                             </div>
-                             <div class="timeline-desc py-[6px] px-4 text-sm">
-                              <p class="font-semibold text-gray-500">Sarah Lee exited</p>
-                              <a href="javascript:void('')" class="mt-4 text-red-600">Regular</a>
-                             </div>
-                         </li>
-                      </ul>
+						<ul class="relative timeline-widget">
+							{% for log in recent_logs %}
+							<li class="timeline-item flex relative overflow-hidden min-h-[70px]">
+								<div class="timeline-time text-gray-500 min-w-[90px] py-[6px] text-sm pr-4 text-end">
+									{{ log.timestamp|time }}
+								</div>
+								<div class="flex flex-col items-center timeline-badge-wrap">
+									<div class="timeline-badge w-3 h-3 rounded-full shrink-0 bg-transparent border-2 
+										{% if log.log_type == 'entry' %}border-blue-300{% else %}border-red-300{% endif %} my-[10px]">
+									</div>
+									<div class="timeline-badge-border block h-full w-[1px] bg-gray-100"></div>
+								</div>
+								<div class="timeline-desc py-[6px] px-4 text-sm">
+									<p class="font-semibold text-gray-500">
+										{{ log.get_user_name }} {{ log.get_log_type_display|lower }}
+									</p>
+									<a href="javascript:void(0)" class="mt-4 
+										{% if log.user_type == 'regular' %}text-blue-600
+										{% elif log.user_type == 'temporary' %}text-orange-600
+										{% else %}text-green-600{% endif %}">
+										{{ log.get_user_type_display }}
+									</a>
+								</div>
+							</li>
+							{% empty %}
+							<li class="py-4 text-center text-gray-500">
+								No recent access logs found
+							</li>
+							{% endfor %}
+						</ul>
                       </div>
                     </div>
                     <div class="col-span-2">
-                      <div class="h-full card">
+                      <div class="h-full card overflow-x-auto">
                           <div class="card-body">
                               <h4 class="mb-5 text-lg font-semibold text-gray-500">Current Lab Occupants</h4>
                               <div class="relative overflow-x-auto">
                                   <!-- table -->
-                                  <table class="w-full text-sm text-left text-gray-500 whitespace-nowrap">
-                                      <thead >
-                                          <tr class="text-sm">
-                                              <th scope="col" class="p-4 font-semibold">Profile</th>
-                                              <th scope="col" class="p-4 font-semibold">Type</th>
-                                              <th scope="col" class="p-4 font-semibold">Status</th>
-                                              <th scope="col" class="p-4 font-semibold">Since</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          <tr>
-                                              <td class="p-4 text-sm">
-                                                 <div class="flex items-center gap-6">
-                                                  <div class="inline-block w-12 h-12"><img src="./assets/images/profile/user-1.jpg" alt="" class="rounded-full w-100"></div>
-                                                  <div class="flex flex-col gap-1 text-gray-500">
-                                                    <h3 class="font-bold ">Mark J. Freeman</h3>
-                                                    <span class="font-normal">Prof. English</span>
-                                                </div>
-                                                 </div>
-                                              </td>
-                                              <td class="p-4">
-                                                   <h3 class="font-medium">Regular</h3>
-                                              </td>
-                                              <td class="p-4">
-                                                  <span class="inline-flex items-center px-4 py-2 font-semibold text-teal-500 bg-teal-400 rounded-3xl">Available</span>
-                                              </td>
-                                              <td class="p-4">
-                                                <h3 class="font-medium text-teal-500">+53</h3>
-                                            </td>
-                                          </tr>
-                                      </tbody>
-                                  </table>
+								<table class="w-full text-sm text-left text-gray-500 whitespace-nowrap">
+									<thead>
+										<tr class="text-sm">
+											<th scope="col" class="p-4 font-semibold">Profile</th>
+											<th scope="col" class="p-4 font-semibold">Type</th>
+											<th scope="col" class="p-4 font-semibold">Status</th>
+											<th scope="col" class="p-4 font-semibold">Since</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for session in current_sessions %}
+										<tr>
+											<td class="p-4 text-sm">
+												<div class="flex items-center gap-6">
+													{% if session.regular_student %}
+														<div class="inline-block w-12 h-12">
+															{% if session.regular_student.photo %}
+																<img src="{{ session.regular_student.photo.url }}" alt="" class="object-cover rounded-full w-full h-full">
+															{% else %}
+															<div class="flex items-center justify-center w-12 h-12 text-xl font-bold text-white bg-blue-700 rounded-full">
+																{{ session.regular_student.first_name|first }}{{ session.regular_student.last_name|first }}
+															</div>
+															{% endif %}
+														</div>
+														<div class="flex flex-col gap-1 text-gray-500">
+															<h3 class="font-bold">{{ session.regular_student.first_name }} {{ session.regular_student.last_name }}</h3>
+															<span class="font-normal">{{ session.regular_student.student_id }}</span>
+														</div>
+													{% elif session.temporary_student %}
+														<div class="inline-block w-12 h-12">
+															{% if session.temporary_student.photo %}
+																<img src="{{ session.temporary_student.photo.url }}" alt="" class="object-cover rounded-full w-full h-full">
+															{% else %}
+														<div class="flex items-center justify-center w-12 h-12 text-xl font-bold text-white bg-blue-700 rounded-full">
+															{{ session.temporary_student.first_name|first }}{{ session.temporary_student.last_name|first }}
+														</div>
+														{% endif %}
+														</div>
+														<div class="flex flex-col gap-1 text-gray-500">
+															<h3 class="font-bold">{{ session.temporary_student.first_name }} {{ session.temporary_student.last_name }}</h3>
+															<span class="font-normal">{{ session.temporary_student.student_id }}</span>
+														</div>
+													{% elif session.guest %}
+														<div class="inline-block w-12 h-12">
+															<img src="{% static 'images/profile/user-1.jpg' %}" alt="" class="rounded-full w-full h-full">
+														</div>
+														<div class="flex flex-col gap-1 text-gray-500">
+															<h3 class="font-bold">{{ session.guest.first_name }} {{ session.guest.last_name }}</h3>
+															<span class="font-normal">{{ session.guest.school_or_organization }}</span>
+														</div>
+													{% endif %}
+												</div>
+											</td>
+											<td class="p-4">
+												<h3 class="font-medium">{{ session.get_user_type_display }}</h3>
+											</td>
+											<td class="p-4">
+												<span class="inline-flex items-center px-4 py-2 font-semibold text-teal-500 bg-teal-400 rounded-3xl">
+													In Lab
+												</span>
+											</td>
+											<td class="p-4">
+												<h3 class="font-medium text-teal-500">
+													{{ session.entry_time|timesince }}
+												</h3>
+											</td>
+										</tr>
+										{% empty %}
+										<tr>
+											<td colspan="4" class="p-4 text-center text-gray-500">
+												No current occupants in the lab
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
                               </div>
                           </div>
                       </div>
@@ -407,25 +453,6 @@
 								<div class="card-body">
 									<div class="flex justify-between mb-5">
 										<h4 class="mb-2 text-lg font-semibold text-gray-500 sm:mb-0">Weekly Access</h4>
-										<div class="hs-dropdown relative inline-flex [--placement:bottom-right] sm:[--trigger:hover]">
-											<a class="relative align-middle rounded-full cursor-pointer hs-dropdown-toggle">
-                                                <i class="text-2xl text-gray-400 ti ti-dots-vertical"></i>
-											</a>
-											<div class="card hs-dropdown-menu transition-[opacity,margin] rounded-md duration hs-dropdown-open:opacity-100 opacity-0 mt-2 min-w-max  w-[150px] hidden z-[12]"
-												aria-labelledby="hs-dropdown-custom-icon-trigger">
-												<div class="p-0 py-2 card-body">
-													<a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-2.5 hover:bg-gray-200 text-gray-400">
-														<p class="text-sm ">Action</p>
-													</a>
-													<a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-2.5 hover:bg-gray-200 text-gray-400">
-														<p class="text-sm ">Another Action</p>
-													</a>
-													<a href="javscript:void(0)" class="flex gap-2 items-center font-medium px-4 py-2.5 hover:bg-gray-200 text-gray-400">
-														<p class="text-sm ">Something else here</p>
-													</a>
-												</div>
-											</div>
-										</div>
 									</div>
 									<div id="profit"></div>
 								</div>
@@ -433,65 +460,91 @@
 						 </div>
 
 						 <div class="flex flex-col gap-6">
+							
 							<div class="card">
 								<div class="card-body">
 									<h4 class="mb-4 text-lg font-semibold text-gray-500">Lab Occupancy</h4>
 									<div class="flex items-center justify-between gap-12">
-                                    <div >
-										<h3 class="text-[22px] font-semibold text-gray-500 mb-4">358</h3>
-										<div class="flex items-center gap-1 mb-3">
-                                           <span class="flex items-center justify-center w-5 h-5 bg-teal-400 rounded-full">
-											<i class="text-teal-500 ti ti-arrow-up-left"></i>
-										   </span>
-										   <p class="text-sm font-normal text-gray-500 ">+9%</p>
-										   <p class="text-sm font-normal text-gray-400 text-nowrap">last year</p>
+										<div class="lab-occupancy">
+											<h3 class="text-[22px] font-semibold text-gray-500 mb-4">0</h3>
+											<div class="flex items-center gap-1 mb-3">
+												<span class="flex items-center justify-center w-5 h-5 bg-teal-400 rounded-full">
+													<i class="text-teal-500 ti ti-arrow-up-left"></i>
+												</span>
+												<p class="text-sm font-normal text-gray-500">Current</p>
+											</div>
+											<div class="flex gap-4">
+												<div class="flex items-center gap-2">
+													<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+													<p class="text-xs font-normal text-gray-400">Students</p>
+												</div>
+												<div class="flex items-center gap-2">
+													<span class="w-2 h-2 bg-red-500 rounded-full"></span>
+													<p class="text-xs font-normal text-gray-400">Guests</p>
+												</div>
+											</div>
 										</div>
-										<div class="flex gap-4">
-                                           <div class="flex items-center gap-2">
-											<span class="w-2 h-2 bg-blue-600 rounded-full"></span>
-											<p class="text-xs font-normal text-gray-400">Oragnic</p>
-										   </div>
-                                           <div class="flex items-center gap-2">
-											<span class="w-2 h-2 bg-red-500 rounded-full"></span>
-											<p class="text-xs font-normal text-gray-400"> Refferal</p>
-										   </div>
+										<div class="flex items-center">
+											<div id="grade"></div>
 										</div>
-									</div>
-									<div class="flex items-center">
-										<div id="grade"></div>
-									</div>
 									</div>
 								</div>
 							</div>
+
 							<div class="card">
 								<div class="card-body">
 									<div class="flex items-center justify-between gap-6">
-                                    <div class="flex flex-col gap-4">
-										<h4 class="text-lg font-semibold text-gray-500">Product Sales</h4>
-										<div class="flex flex-col gap-4">
-										<h3 class="text-[22px] font-semibold text-gray-500">$6,820</h3>
-										<div class="flex items-center gap-1">
-                                           <span class="flex items-center justify-center w-5 h-5 bg-red-400 rounded-full">
-											<i class="text-red-500 ti ti-arrow-down-right"></i>
-										   </span>
-										   <p class="text-sm font-normal text-gray-500 ">+9%</p>
-										   <p class="text-sm font-normal text-gray-400 text-nowrap">last year</p>
+										<div class="flex flex-col gap-4 total-students">
+											<h4 class="text-lg font-semibold text-gray-500">Total Students</h4>
+											<div class="flex flex-col gap-4">
+												<h3 class="text-[22px] font-semibold text-gray-500">0</h3>
+											</div>
 										</div>
-									</div>
-									</div>
-
-										<div class="flex items-center self-start justify-center text-white bg-red-500 rounded-full w-11 h-11">
-											<i class="text-xl ti ti-currency-dollar"></i>
+										<div class="flex items-center self-start justify-center text-white bg-blue-600 rounded-full w-11 h-11">
+											<i class="text-xl ti ti-users"></i>
 										</div>
-
 									</div>
 								</div>
-								<div id="earning"></div>
 							</div>
+
+
+
 						 </div>
 
 
 					  </div>
+							<div class="card">
+								<div class="card-body">
+									<div class="flex items-center justify-between gap-6">
+										<div class="flex flex-col gap-4 total-temporary">
+											<h4 class="text-lg font-semibold text-gray-500">Active Temporary</h4>
+											<div class="flex flex-col gap-4">
+												<h3 class="text-[22px] font-semibold text-gray-500">0</h3>
+											</div>
+										</div>
+										<div class="flex items-center self-start justify-center text-white bg-orange-500 rounded-full w-11 h-11">
+											<i class="text-xl ti ti-user-exclamation"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card">
+								<div class="card-body">
+									<div class="flex items-center justify-between gap-6">
+										<div class="flex flex-col gap-4 total-guests">
+											<h4 class="text-lg font-semibold text-gray-500">Recent Guests</h4>
+											<div class="flex flex-col gap-4">
+												<h3 class="text-[22px] font-semibold text-gray-500">0</h3>
+											</div>
+										</div>
+										<div class="flex items-center self-start justify-center text-white bg-purple-500 rounded-full w-11 h-11">
+											<i class="text-xl ti ti-user-question"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+
                 <!-- Lab Occupancy Chart End -->
 
 					   <!-- <div class="grid grid-cols-1 gap-6 xl:grid-cols-4 lg:grid-cols-2">
@@ -710,7 +763,89 @@
 {% comment %} <script src="{% static "js/sidebarmenu.js" %}"></script> {% endcomment %}
 
 	<script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-    <script src="{% static "js/dashboard.js" %}"></script>
+	<script>
+    // Weekly Access Chart
+    const weeklyOptions = {
+        series: [
+            {
+                name: 'Entries',
+                data: {{ weekly_data.entries|safe }}
+            },
+            {
+                name: 'Exits',
+                data: {{ weekly_data.exits|safe }}
+            }
+        ],
+        chart: {
+            type: 'bar',
+            height: 350,
+            stacked: true,
+            toolbar: { show: false }
+        },
+        colors: ['#3b82f6', '#ef4444'],
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '30%',
+                endingShape: 'rounded'
+            },
+        },
+        dataLabels: { enabled: false },
+        stroke: { show: true, width: 2, colors: ['transparent'] },
+        xaxis: {
+            categories: {{ weekly_data.dates|safe }},
+        },
+        yaxis: { title: { text: 'Number of Accesses' } },
+        fill: { opacity: 1 },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + " accesses"
+                }
+            }
+        }
+    };
+
+    const weeklyChart = new ApexCharts(document.querySelector("#profit"), weeklyOptions);
+    weeklyChart.render();
+
+    // Lab Occupancy Gauge
+    const occupancyPercentage = Math.min(100, Math.round({{ current_occupants }} / 50 * 100)); // Assuming max capacity is 50
+    const gradeOptions = {
+        series: [occupancyPercentage],
+        chart: {
+            height: 150,
+            type: 'radialBar',
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: { size: '60%' },
+                dataLabels: {
+                    name: { show: false },
+                    value: {
+                        offsetY: 5,
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        formatter: function (val) {
+                            return val + '%';
+                        }
+                    }
+                }
+            }
+        },
+        colors: ['#10b981'],
+        stroke: { lineCap: 'round' },
+    };
+
+    const gradeChart = new ApexCharts(document.querySelector("#grade"), gradeOptions);
+    gradeChart.render();
+
+    // Stats Cards
+    document.querySelector('.lab-occupancy h3').textContent = '{{ current_occupants }}';
+    document.querySelector('.total-students h3').textContent = '{{ total_students }}';
+    document.querySelector('.total-temporary h3').textContent = '{{ total_temporary }}';
+    document.querySelector('.total-guests h3').textContent = '{{ total_guests_last_month }}';
+</script>
 </body>
 
 </html>

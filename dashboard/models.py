@@ -52,26 +52,36 @@ class BaseStudent(models.Model):
         super().save(*args, **kwargs)
 
     def generate_student_id(self):
-        """Generates a unique student ID based on initials and year."""
+        """Generates a unique student ID based on initials, year, and student type."""
         initials = (self.first_name[0] + self.last_name[0]).upper()
-        year = str(self.year_joined)[-2:]
-        # Get the last student with the same year from all student types
-        from .models import RegularStudent, TemporaryStudent
-        all_students = list(RegularStudent.objects.filter(year_joined=self.year_joined)) + \
-                      list(TemporaryStudent.objects.filter(year_joined=self.year_joined))
+        init_year = self.year_joined + 3
+        year = str(init_year)[-2:]
 
-        all_students.sort(key=lambda x: x.created_at)
-        if all_students:
-            last_student = all_students[-1]
-            if last_student.student_id:
-                last_number = int(last_student.student_id[-3:])
-                new_number = str(last_number + 1).zfill(3)
-            else:
-                new_number = "001"
+        from .models import RegularStudent, TemporaryStudent
+
+        if isinstance(self, TemporaryStudent):
+            type_prefix = "TMP"
+            relevant_students = list(TemporaryStudent.objects.filter(year_joined=self.year_joined))
+        elif isinstance(self, RegularStudent):
+            type_prefix = ""
+            relevant_students = list(RegularStudent.objects.filter(year_joined=self.year_joined))
+        else:
+            type_prefix = "UNK"
+            relevant_students = []
+
+        relevant_students.sort(key=lambda x: x.created_at)
+
+        if relevant_students and relevant_students[-1].student_id:
+            try:
+                last_number = int(relevant_students[-1].student_id[-3:])
+            except ValueError:
+                last_number = 0
+            new_number = str(last_number + 1).zfill(3)
         else:
             new_number = "001"
 
-        return f"PRPC{year}-{initials}{new_number}"
+        return f"PRPC{year}-{type_prefix}{initials}{new_number}"
+
 
     def generate_qr_code(self):
         """Generates a QR code based on the student ID."""
@@ -83,6 +93,11 @@ class BaseStudent(models.Model):
         # Save the QR code to the model's image field
         filename = f'qrcode_{self.student_id}.png'
         self.qr_code.save(filename, ContentFile(qr_io.getvalue()), save=False)
+        
+    @property
+    def year_batch(self):
+        """Returns the calculated graduation year (Year Joined + 3)"""
+        return self.year_joined + 3
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.student_id}"
@@ -107,6 +122,12 @@ class TemporaryStudent(BaseStudent):
     valid_until = models.DateTimeField()
     reason = models.CharField(max_length=255)
 
+    @property
+    def status(self):
+        """Returns 'Active' if valid, 'Expired' otherwise"""
+        now = timezone.now()
+        return 'Active' if self.valid_from <= now <= self.valid_until else 'Expired'
+
     def is_valid(self):
         """Check if the temporary access is still valid"""
         return self.is_active and self.valid_from <= timezone.now() <= self.valid_until
@@ -118,6 +139,9 @@ class TemporaryStudent(BaseStudent):
         if not self.qr_code:
             self.generate_qr_code()
             super().save(update_fields=['qr_code'])
+        if self.valid_until < timezone.now():
+            self.is_active = False
+        super().save(*args, **kwargs)
 
 
 class Guest(models.Model):

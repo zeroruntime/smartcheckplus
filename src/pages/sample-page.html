@@ -9,33 +9,112 @@
 <body class=" bg-surface">
 	<main>
 		<!--start the project-->
-		<div id="main-wrapper" class=" flex p-5 xl:pr-0 min-h-screen">
+		<div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
 			<aside id="application-sidebar-brand"
 				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300" >
 				@@include("../partials/sidebar.html")
 			</aside>
-			<div class=" w-full page-wrapper xl:px-6 px-0">
+			<div class="w-full px-0 page-wrapper xl:px-6">
 
 				<!-- Main Content -->
-				<main class="h-full  max-w-full">
-					<div class="container full-container p-0 flex flex-col gap-6">
+				<main class="h-full max-w-full">
+					<div class="container flex flex-col gap-6 p-0 full-container">
 					<!--  Header Start -->
-				<header class=" bg-white shadow-md rounded-md w-full text-sm py-4 px-6">
+				<header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md ">
 					@@include("../partials/header.html")
 				</header>
 				<!--  Header End -->
-				<div class="card">
-					<div class="card-body">
-						<h6 class="text-lg text-gray-500 font-semibold mb-6">Sample Page</h6>
-						<p class="text-sm text-gray-400">This is a sample page</p>
-							</div>
-						</div>              
-					</div>
+
+                <div class="container flex flex-col gap-6 p-0 full-container">
+                    <!-- Header -->
+                    <header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-xl font-semibold text-gray-800">QR Code Scanner</h1>
+                        </div>
+                    </header>
+
+                    <!-- Main Scanner Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex flex-col gap-6">
+                                <!-- Scanner Section -->
+                                <div class="flex flex-col gap-6 md:flex-row">
+                                    <!-- Scanner Viewport -->
+                                    <div class="flex-1">
+                                        <div class="overflow-hidden bg-gray-100 rounded-lg aspect-square" id="scanner-viewport">
+                                            <div class="flex items-center justify-center h-full text-gray-400" id="scanner-placeholder">
+                                                <div class="p-4 text-center">
+                                                    <i class="mb-2 text-4xl fas fa-camera"></i>
+                                                    <p>Scanner will appear here</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Scanner Controls -->
+                                        <div class="flex gap-3 mt-4">
+                                            <button id="start-scanner" class="flex-1 btn btn-primary">
+                                                <i class="mr-2 fas fa-play"></i> Start Scanner
+                                            </button>
+                                            <button id="stop-scanner" class="flex-1 btn btn-outline-danger" disabled>
+                                                <i class="mr-2 fas fa-stop"></i> Stop
+                                            </button>
+                                        </div>
+
+                                        <!-- Camera Selection -->
+                                        <div class="hidden mt-3" id="camera-selection">
+                                            <label class="block mb-1 text-sm font-medium text-gray-700">Camera</label>
+                                            <select id="camera-select" class="w-full form-select"></select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Scan Results -->
+                                    <div class="flex-1">
+                                        <div class="h-full p-4 bg-white border rounded-lg">
+                                            <h3 class="mb-4 text-lg font-medium text-gray-700">Scan Results</h3>
+                                            <div id="scan-results">
+                                                <div class="py-8 text-center text-gray-400" id="no-results">
+                                                    <i class="mb-3 text-4xl fas fa-qrcode"></i>
+                                                    <p>No scan results yet</p>
+                                                </div>
+                                                <div id="result-content" class="hidden">
+                                                    <!-- Results will be displayed here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Messages -->
+                                <div id="status-message" class="hidden"></div>
+
+                                <!-- Recent Scans Table -->
+                                <div class="mt-4">
+                                    <h3 class="mb-3 text-lg font-medium text-gray-700">Recent Scans</h3>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full overflow-hidden bg-white rounded-lg">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Time</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Name</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Type</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200" id="recent-scans">
+                                                <!-- Recent scans will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
 				</main>
 				<!-- Main Content End -->
-				
+
 			</div>
 		</div>
 		<!--end of project-->

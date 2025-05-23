@@ -8,9 +8,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import timedelta, datetime
 from django.utils import timezone
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 import json
 import uuid
 import csv
+
+from dashboard.scanning_logic import QRCodeScanner
 
 from .models import (
     RegularStudent, TemporaryStudent, Guest, AccessLog,
@@ -28,55 +31,65 @@ def dashboard(request):
     username = request.user.username
     profile = request.user.profile
 
-     # Get counts for dashboard stats
-    regular_count = RegularStudent.objects.filter(is_active=True).count()
-    temporary_count = TemporaryStudent.objects.filter(is_active=True, valid_until__gte=timezone.now()).count()
-
-    # Get current lab occupancy
-    current_sessions = LabSession.objects.filter(exit_time__isnull=True)
-    occupancy_count = current_sessions.count()
-
-    # Get today's logs
+ # Get recent access logs (last 20 entries)
+    recent_logs = AccessLog.objects.select_related(
+        'regular_student', 'temporary_student', 'guest'
+    ).order_by('-timestamp')[:5]
+    
+    # Get current lab occupants (people who have entered but not exited)
+    current_sessions = LabSession.objects.filter(
+        exit_time__isnull=True
+    ).select_related(
+        'regular_student', 'temporary_student', 'guest'
+    )
+    
+    # Prepare data for charts
+    # Weekly access data
     today = timezone.now().date()
-    today_logs = AccessLog.objects.filter(timestamp__date=today)
-    entry_count = today_logs.filter(log_type='entry').count()
-    exit_count = today_logs.filter(log_type='exit').count()
-
-    # Recent activity
-    recent_logs = AccessLog.objects.all().order_by('-timestamp')[:10]
-
-    # Who's currently in the lab
-    current_users = []
-    for session in current_sessions:
-        if session.regular_student:
-            user = session.regular_student
-            user_type = 'Regular Student'
-        elif session.temporary_student:
-            user = session.temporary_student
-            user_type = 'Temporary Student'
-        elif session.guest:
-            user = session.guest
-            user_type = 'Guest'
-        else:
-            continue
-
-        current_users.append({
-            'name': f"{user.first_name} {user.last_name}",
-            'id': getattr(user, 'student_id', getattr(user, 'guest_id', 'Unknown')),
-            'entry_time': session.entry_time,
-            'type': user_type,
-        })
-
-    context = {
-        'regular_count': regular_count,
-        'temporary_count': temporary_count,
-        'occupancy_count': occupancy_count,
-        'entry_count': entry_count,
-        'exit_count': exit_count,
-        'recent_logs': recent_logs,
-        'current_users': current_users,
+    week_dates = [today - timedelta(days=i) for i in range(6, -1, -1)]
+    
+    weekly_data = {
+        'dates': [d.strftime('%a') for d in week_dates],
+        'entries': [],
+        'exits': []
     }
-    return render(request, 'index.html', {'username': username,  'profile': profile})
+    
+    for date in week_dates:
+        start = timezone.make_aware(timezone.datetime.combine(date, timezone.datetime.min.time()))
+        end = timezone.make_aware(timezone.datetime.combine(date, timezone.datetime.max.time()))
+        
+        entries = AccessLog.objects.filter(
+            timestamp__range=(start, end),
+            log_type='entry'
+        ).count()
+        
+        exits = AccessLog.objects.filter(
+            timestamp__range=(start, end),
+            log_type='exit'
+        ).count()
+        
+        weekly_data['entries'].append(entries)
+        weekly_data['exits'].append(exits)
+    
+    # Lab occupancy stats
+    total_students = RegularStudent.objects.filter(is_active=True).count()
+    total_temporary = TemporaryStudent.objects.filter(is_active=True, valid_until__gte=timezone.now()).count()
+    total_guests_last_month = Guest.objects.filter(
+        created_at__gte=timezone.now() - timedelta(days=30)
+    ).count()
+    
+    context = {
+        'recent_logs': recent_logs,
+        'current_sessions': current_sessions,
+        'weekly_data': weekly_data,
+        'total_students': total_students,
+        'total_temporary': total_temporary,
+        'total_guests_last_month': total_guests_last_month,
+        'current_occupants': current_sessions.count(),
+        'username': username,
+        'profile': profile
+    }
+    return render(request, 'index.html', context)
 
 @login_required
 def student_list(request):
@@ -415,6 +428,8 @@ def guest_detail(request, guest_id):
 # ACCESS CONTROL
 @login_required
 def access_logs(request):
+    username = request.user.username
+    profile = request.user.profile   
     # Get filter parameters
     start_date_str = request.GET.get('start_date', '')
     end_date_str = request.GET.get('end_date', '')
@@ -493,9 +508,55 @@ def access_logs(request):
         'user_type': user_type,
         'log_type': log_type,
         'query': query,
+        'username': username,
+        'profile': profile
     }
 
     return render(request, 'control/access_logs.html', context)
+
+@login_required
+def scan_qr(request):
+    username = request.user.username
+    profile = request.user.profile
+
+    context = {
+        'page_title': 'Scan QR Code',
+        'scan_endpoint': reverse('process_scan'),
+        'username': username,
+        'profile': profile
+    }
+    return render(request, 'control/scan_qr.html', context)
+
+# Process QR code scan
+@login_required
+@csrf_exempt  # Note: In production, use proper CSRF protection
+def process_scan(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            qr_code_data = data.get('qr_code')
+
+            # Initialize the scanner with the current user
+            scanner = QRCodeScanner(request.user)
+
+            # Process the scan
+            result = scanner.process_scan(qr_code_data)
+
+            return JsonResponse(result)
+
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Error processing scan: {str(e)}',
+                'data': None
+            })
+
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Invalid request method',
+        'data': None
+    })
+
 
 @login_required
 def system_settings(request):

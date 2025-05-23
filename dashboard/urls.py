@@ -23,7 +23,9 @@ urlpatterns = [
 
     # Access URLS
     path('access/', views.access_logs, name='access_logs'),
-    path('settings/', views.system_settings, name='system_settings')
+    path('settings/', views.system_settings, name='system_settings'),
+    path('scan/', views.scan_qr, name='scan_qr_code'),
+    path('scan/process/', views.process_scan, name='process_scan'),
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if settings.DEBUG:

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html   lang="en" >
+
+<head>
+	@@include("../partials/head.html")
+	<title>Spike TailwindCSS HTML Admin Template</title>
+
+    <style>
+        /* Custom styles for the scanner */
+        #scanner-viewport {
+            position: relative;
+            min-height: 300px;
+            border: 2px dashed #e5e7eb;
+        }
+
+        #scanner-viewport video {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Status message animations */
+        #status-message {
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .flex-col.md\:flex-row {
+                flex-direction: column;
+            }
+        }
+        </style>
+
+</head>
+
+<body class=" bg-surface">
+	<main>
+		<!--start the project-->
+		<div id="main-wrapper" class="flex min-h-screen p-5 xl:pr-0">
+			<aside id="application-sidebar-brand"
+				class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full  transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed xl:top-5 xl:left-auto top-0 left-0 with-vertical h-screen z-[999] shrink-0  w-[270px] shadow-md xl:rounded-md rounded-none bg-white left-sidebar   transition-all duration-300" >
+				@@include("../partials/sidebar.html")
+			</aside>
+			<div class="w-full px-0 page-wrapper xl:px-6">
+
+				<!-- Main Content -->
+				<main class="h-full max-w-full">
+					<div class="container flex flex-col gap-6 p-0 full-container">
+					<!--  Header Start -->
+				<header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md ">
+					@@include("../partials/header.html")
+				</header>
+				<!--  Header End -->
+
+                <div class="container flex flex-col gap-6 p-0 full-container">
+                    <!-- Header -->
+                    <header class="w-full px-6 py-4 text-sm bg-white rounded-md shadow-md">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-xl font-semibold text-gray-800">QR Code Scanner</h1>
+                        </div>
+                    </header>
+
+                    <!-- Main Scanner Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex flex-col gap-6">
+                                <!-- Scanner Section -->
+                                <div class="flex flex-col gap-6 md:flex-row">
+                                    <!-- Scanner Viewport -->
+                                    <div class="flex-1">
+                                        <div class="overflow-hidden bg-gray-100 rounded-lg aspect-square" id="scanner-viewport">
+                                            <div class="flex items-center justify-center h-full text-gray-400" id="scanner-placeholder">
+                                                <div class="p-4 text-center">
+                                                    <i class="mb-2 text-4xl fas fa-camera"></i>
+                                                    <p>Scanner will appear here</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Scanner Controls -->
+                                        <div class="flex gap-3 mt-4">
+                                            <button id="start-scanner" class="flex-1 btn btn-primary">
+                                                <i class="mr-2 fas fa-play"></i> Start Scanner
+                                            </button>
+                                            <button id="stop-scanner" class="flex-1 btn btn-outline-danger" disabled>
+                                                <i class="mr-2 fas fa-stop"></i> Stop
+                                            </button>
+                                        </div>
+
+                                        <!-- Camera Selection -->
+                                        <div class="hidden mt-3" id="camera-selection">
+                                            <label class="block mb-1 text-sm font-medium text-gray-700">Camera</label>
+                                            <select id="camera-select" class="w-full form-select"></select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Scan Results -->
+                                    <div class="flex-1">
+                                        <div class="h-full p-4 bg-white border rounded-lg">
+                                            <h3 class="mb-4 text-lg font-medium text-gray-700">Scan Results</h3>
+                                            <div id="scan-results">
+                                                <div class="py-8 text-center text-gray-400" id="no-results">
+                                                    <i class="mb-3 text-4xl fas fa-qrcode"></i>
+                                                    <p>No scan results yet</p>
+                                                </div>
+                                                <div id="result-content" class="hidden">
+                                                    <!-- Results will be displayed here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Messages -->
+                                <div id="status-message" class="hidden"></div>
+
+                                <!-- Recent Scans Table -->
+                                <div class="mt-4">
+                                    <h3 class="mb-3 text-lg font-medium text-gray-700">Recent Scans</h3>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full overflow-hidden bg-white rounded-lg">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Time</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Name</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Type</th>
+                                                    <th class="px-4 py-2 text-xs font-medium text-left text-gray-500 uppercase">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200" id="recent-scans">
+                                                <!-- Recent scans will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+				</main>
+				<!-- Main Content End -->
+
+			</div>
+		</div>
+		<!--end of project-->
+	</main>
+
+
+	@@include("../partials/scripts.html")
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const scannerViewport = document.getElementById('scanner-viewport');
+            const scannerPlaceholder = document.getElementById('scanner-placeholder');
+            const startButton = document.getElementById('start-scanner');
+            const stopButton = document.getElementById('stop-scanner');
+            const cameraSelect = document.getElementById('camera-select');
+            const cameraSelection = document.getElementById('camera-selection');
+            const statusMessage = document.getElementById('status-message');
+
+            // Scanner variables
+            let html5QrCode;
+            let currentScanResult = null;
+            let cameras = [];
+
+            // ======================
+            // Core Functions
+            // ======================
+
+            // Show status message (now defined first)
+            function showStatus(message, type) {
+                if (!statusMessage) {
+                    console.log(message); // Fallback if DOM not ready
+                    return;
+                }
+
+                statusMessage.classList.remove('hidden');
+
+                let bgColor, icon;
+                switch (type) {
+                    case 'success':
+                        bgColor = 'bg-green-50 text-green-800';
+                        icon = '<i class="mr-2 fas fa-check-circle"></i>';
+                        break;
+                    case 'error':
+                        bgColor = 'bg-red-50 text-red-800';
+                        icon = '<i class="mr-2 fas fa-exclamation-circle"></i>';
+                        break;
+                    case 'info':
+                        bgColor = 'bg-blue-50 text-blue-800';
+                        icon = '<i class="mr-2 fas fa-info-circle"></i>';
+                        break;
+                    default:
+                        bgColor = 'bg-gray-50 text-gray-800';
+                        icon = '<i class="mr-2 fas fa-info-circle"></i>';
+                }
+
+                statusMessage.className = `p-3 rounded-md ${bgColor} flex items-center`;
+                statusMessage.innerHTML = `${icon} ${message}`;
+
+                setTimeout(() => {
+                    statusMessage.classList.add('hidden');
+                }, 5000);
+            }
+
+            // Initialize scanner
+            async function initScanner() {
+                try {
+                    // Check if scanner element exists
+                    if (!scannerViewport) {
+                        throw new Error('Scanner viewport element not found');
+                    }
+
+                    html5QrCode = new Html5Qrcode("scanner-viewport");
+
+                    // Get available cameras
+                    try {
+                        cameras = await Html5Qrcode.getCameras();
+                        if (cameras && cameras.length > 0) {
+                            cameraSelection.classList.remove('hidden');
+                            cameraSelect.innerHTML = '';
+                            cameras.forEach((camera, index) => {
+                                const option = document.createElement('option');
+                                option.value = camera.id;
+                                option.text = camera.label || `Camera ${index + 1}`;
+                                cameraSelect.appendChild(option);
+                            });
+                        } else {
+                            showStatus("No cameras found. Using default camera.", "info");
+                        }
+                    } catch (cameraErr) {
+                        console.warn("Camera enumeration warning:", cameraErr);
+                        showStatus("Could not enumerate cameras. Trying default camera...", "info");
+                        cameras = [];
+                    }
+
+                } catch (err) {
+                    console.error("Scanner initialization error:", err);
+                    showStatus("Scanner initialization failed: " + err.message, "error");
+                    startButton.disabled = true;
+                    throw err; // Re-throw for outer catch
+                }
+            }
+
+            // Start scanner
+            async function startScanner() {
+                if (!html5QrCode) {
+                    showStatus("Scanner not initialized properly", "error");
+                    return false;
+                }
+
+                showStatus("Starting scanner...", "info");
+
+                const config = {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1.0
+                };
+
+                try {
+                    // Try user-selected camera first
+                    const cameraId = cameras.length > 0
+                        ? cameraSelect.value
+                        : { facingMode: "environment" };
+
+                    await html5QrCode.start(
+                        cameraId,
+                        config,
+                        onScanSuccess,
+                        onScanError
+                    );
+
+                    scannerPlaceholder.classList.add('hidden');
+                    startButton.disabled = true;
+                    stopButton.disabled = false;
+                    showStatus("Scanner started successfully", "success");
+                    return true;
+                } catch (err) {
+                    console.error("Scanner start error:", err);
+
+                    // Try fallback to environment camera
+                    if (cameras.length > 0) {
+                        try {
+                            showStatus("Trying default camera...", "info");
+                            await html5QrCode.start(
+                                { facingMode: "environment" },
+                                config,
+                                onScanSuccess,
+                                onScanError
+                            );
+
+                            scannerPlaceholder.classList.add('hidden');
+                            startButton.disabled = true;
+                            stopButton.disabled = false;
+                            showStatus("Scanner started with default camera", "success");
+                            return true;
+                        } catch (fallbackErr) {
+                            handleStartError(fallbackErr);
+                            return false;
+                        }
+                    } else {
+                        handleStartError(err);
+                        return false;
+                    }
+                }
+            }
+
+            function handleStartError(err) {
+                let errorMessage = "Failed to start scanner: ";
+
+                if (err.message.includes('NotAllowedError')) {
+                    errorMessage += "Camera permissions denied. Please allow camera access.";
+                } else if (err.message.includes('NotFoundError')) {
+                    errorMessage += "No camera found. Please connect a camera.";
+                } else {
+                    errorMessage += err.message;
+                }
+
+                showStatus(errorMessage, "error");
+                startButton.disabled = false;
+            }
+
+            // Stop scanner
+            async function stopScanner() {
+                try {
+                    await html5QrCode.stop();
+                    scannerPlaceholder.classList.remove('hidden');
+                    startButton.disabled = false;
+                    stopButton.disabled = true;
+                    showStatus("Scanner stopped", "info");
+                } catch (err) {
+                    console.error("Scanner stop error:", err);
+                    showStatus("Failed to stop scanner: " + err.message, "error");
+                }
+            }
+
+            // Scan success handler
+            function onScanSuccess(decodedText, decodedResult) {
+                if (currentScanResult === decodedText) return;
+                currentScanResult = decodedText;
+
+                showStatus("Scan detected, processing...", "info");
+                processScan(decodedText);
+            }
+
+            // Scan error handler
+            function onScanError(errorMessage) {
+                if (!html5QrCode || !html5QrCode.isScanning) return;
+                console.warn('Scan error:', errorMessage);
+            }
+
+            // Process scan with server
+            async function processScan(qrData) {
+                try {
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    const response = await fetch('{{ scan_endpoint }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({ qr_code: qrData })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        showScanResult(data);
+                        addRecentScan(data);
+                        showStatus(data.message, "success");
+                    } else {
+                        showStatus(data.message, "error");
+                    }
+                } catch (error) {
+                    console.error("Scan processing error:", error);
+                    showStatus("Error processing scan: " + error.message, "error");
+                } finally {
+                    currentScanResult = null;
+                }
+            }
+
+            // ... (keep your existing showScanResult and addRecentScan functions) ...
+
+            // ======================
+            // Event Listeners
+            // ======================
+
+            startButton.addEventListener('click', async () => {
+                await startScanner();
+            });
+
+            stopButton.addEventListener('click', async () => {
+                await stopScanner();
+            });
+
+            // ======================
+            // Initialization
+            // ======================
+
+            // Initialize with error handling
+            (async function() {
+                try {
+                    await initScanner();
+                    // Optional: Auto-start scanner if you want
+                    // await startScanner();
+                } catch (err) {
+                    console.error("Initialization error:", err);
+                }
+            })();
+        });
+        </script> -->
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const scannerViewport = document.getElementById('scanner-viewport');
+    const scannerPlaceholder = document.getElementById('scanner-placeholder');
+    const startButton = document.getElementById('start-scanner');
+    const stopButton = document.getElementById('stop-scanner');
+    const cameraSelect = document.getElementById('camera-select');
+    const cameraSelection = document.getElementById('camera-selection');
+    const statusMessage = document.getElementById('status-message');
+
+    // Scanner variables
+    let html5QrCode = null;
+    let currentScanResult = null;
+    let cameras = [];
+    let isScanning = false;
+
+    // ======================
+    // Core Functions
+    // ======================
+
+    // Show status message
+    function showStatus(message, type) {
+        console.log(`Status [${type}]: ${message}`); // Always log to console for debugging
+
+        if (!statusMessage) {
+            return;
+        }
+
+        statusMessage.classList.remove('hidden');
+
+        let bgColor, icon;
+        switch (type) {
+            case 'success':
+                bgColor = 'bg-green-50 text-green-800';
+                icon = '<i class="mr-2 fas fa-check-circle"></i>';
+                break;
+            case 'error':
+                bgColor = 'bg-red-50 text-red-800';
+                icon = '<i class="mr-2 fas fa-exclamation-circle"></i>';
+                break;
+            case 'info':
+                bgColor = 'bg-blue-50 text-blue-800';
+                icon = '<i class="mr-2 fas fa-info-circle"></i>';
+                break;
+            default:
+                bgColor = 'bg-gray-50 text-gray-800';
+                icon = '<i class="mr-2 fas fa-info-circle"></i>';
+        }
+
+        statusMessage.className = `p-3 rounded-md ${bgColor} flex items-center`;
+        statusMessage.innerHTML = `${icon} ${message}`;
+
+        // Clear after a timeout
+        setTimeout(() => {
+            statusMessage.classList.add('hidden');
+        }, 5000);
+    }
+
+    // Check if required DOM elements exist
+    function checkDomElements() {
+        const requiredElements = [
+            { id: 'scanner-viewport', element: scannerViewport },
+            { id: 'start-scanner', element: startButton },
+            { id: 'stop-scanner', element: stopButton }
+        ];
+
+        const missingElements = requiredElements
+            .filter(item => !item.element)
+            .map(item => item.id);
+
+        if (missingElements.length > 0) {
+            throw new Error(`Missing required DOM elements: ${missingElements.join(', ')}`);
+        }
+
+        return true;
+    }
+
+    // Check if Html5Qrcode library is loaded
+    function checkLibraryLoaded() {
+        if (typeof Html5Qrcode === 'undefined') {
+            throw new Error('Html5Qrcode library not loaded. Make sure to include the script.');
+        }
+        return true;
+    }
+
+    // Initialize scanner
+    async function initScanner() {
+        try {
+            // Check DOM elements first
+            checkDomElements();
+
+            // Check library loaded
+            checkLibraryLoaded();
+
+            // Check for camera support first
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showStatus("Your browser doesn't support camera access. Try using Chrome or Firefox.", "error");
+                if (startButton) startButton.disabled = true;
+                return false;
+            }
+
+            // Create a container if scanner viewport doesn't exist
+            if (!document.getElementById("scanner-viewport")) {
+                const container = document.createElement("div");
+                container.id = "scanner-viewport";
+                container.style.width = "100%";
+                container.style.height = "300px";
+                document.body.appendChild(container);
+                showStatus("Created scanner viewport element", "info");
+            }
+
+            // Initialize scanner object
+            try {
+                html5QrCode = new Html5Qrcode("scanner-viewport");
+                showStatus("Scanner object created", "info");
+            } catch (initErr) {
+                console.error("Scanner object creation error:", initErr);
+                showStatus("Couldn't create scanner object. Check HTML structure and library.", "error");
+                if (startButton) startButton.disabled = true;
+                return false;
+            }
+
+            // Get available cameras
+            try {
+                // First check if we can get any media at all
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    // Immediately stop the stream after checking
+                    stream.getTracks().forEach(track => track.stop());
+                    showStatus("Camera access test successful", "info");
+                } catch (mediaErr) {
+                    console.warn("Initial media test failed:", mediaErr);
+                    if (mediaErr.name === "NotAllowedError") {
+                        showStatus("Camera permission denied. Please allow camera access and refresh.", "error");
+                    } else if (mediaErr.name === "NotFoundError") {
+                        showStatus("No camera detected on this device.", "error");
+                    } else {
+                        showStatus(`Camera test failed: ${mediaErr.name || "Unknown error"}`, "error");
+                    }
+                    cameras = [];
+                    // Don't return, still allow the user to try starting the scanner
+                }
+
+                // Now try to enumerate cameras
+                cameras = await Html5Qrcode.getCameras();
+                if (cameras && cameras.length > 0) {
+                    showStatus(`Found ${cameras.length} cameras`, "info");
+
+                    if (cameraSelection && cameraSelect) {
+                        cameraSelection.classList.remove('hidden');
+                        cameraSelect.innerHTML = '';
+                        cameras.forEach((camera, index) => {
+                            const option = document.createElement('option');
+                            option.value = camera.id;
+                            option.text = camera.label || `Camera ${index + 1}`;
+                            cameraSelect.appendChild(option);
+                        });
+                    }
+                } else {
+                    showStatus("No cameras found. Will try default camera.", "info");
+                }
+            } catch (cameraErr) {
+                console.warn("Camera enumeration warning:", cameraErr);
+                showStatus("Could not enumerate cameras. Will try default camera.", "info");
+                cameras = [];
+            }
+
+            // Setup initial UI state
+            if (stopButton) stopButton.disabled = true;
+            if (startButton) startButton.disabled = false;
+
+            return true;
+        } catch (err) {
+            console.error("Scanner initialization error:", err);
+            let errorMsg = "Scanner initialization failed";
+
+            if (err && typeof err.message === 'string') {
+                errorMsg += ": " + err.message;
+            } else if (err && typeof err.toString === 'function' && err.toString() !== '[object Object]') {
+                errorMsg += ": " + err.toString();
+            }
+
+            showStatus(errorMsg, "error");
+            if (startButton) startButton.disabled = true;
+            return false;
+        }
+    }
+
+    // Start scanner
+    async function startScanner() {
+        if (!html5QrCode) {
+            showStatus("Scanner not initialized properly. Try refreshing the page.", "error");
+            return false;
+        }
+
+        if (isScanning) {
+            showStatus("Scanner is already running", "info");
+            return true;
+        }
+
+        showStatus("Starting scanner...", "info");
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+
+        // First check if camera access is even available
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showStatus("Your browser doesn't support camera access. Try a modern browser like Chrome or Firefox.", "error");
+            return false;
+        }
+
+        try {
+            // Try to verify camera availability before starting scanner
+            try {
+                await navigator.mediaDevices.getUserMedia({ video: true });
+                showStatus("Camera access confirmed", "info");
+            } catch (mediaErr) {
+                console.error("Media access error:", mediaErr);
+                // Don't return here, let the html5QrCode library try anyway
+                showStatus("Camera access check failed, trying scanner anyway", "info");
+            }
+
+            // Try user-selected camera first if available
+            let cameraId;
+
+            if (cameras.length > 0 && cameraSelect && cameraSelect.value) {
+                cameraId = cameraSelect.value;
+                showStatus(`Using selected camera: ${cameraId}`, "info");
+            } else {
+                cameraId = { facingMode: "environment" };
+                showStatus("Using default environment camera", "info");
+            }
+
+            await html5QrCode.start(
+                cameraId,
+                config,
+                onScanSuccess,
+                onScanError
+            );
+
+            isScanning = true;
+            if (scannerPlaceholder) scannerPlaceholder.classList.add('hidden');
+            if (startButton) startButton.disabled = true;
+            if (stopButton) stopButton.disabled = false;
+
+            showStatus("Scanner started successfully", "success");
+            return true;
+        } catch (err) {
+            console.error("Scanner start error:", err);
+
+            // Try fallback approaches
+            try {
+                // First try with user facing camera
+                showStatus("Trying user-facing camera...", "info");
+                await html5QrCode.start(
+                    { facingMode: "user" },
+                    config,
+                    onScanSuccess,
+                    onScanError
+                );
+
+                isScanning = true;
+                if (scannerPlaceholder) scannerPlaceholder.classList.add('hidden');
+                if (startButton) startButton.disabled = true;
+                if (stopButton) stopButton.disabled = false;
+
+                showStatus("Scanner started with user-facing camera", "success");
+                return true;
+            } catch (userCameraErr) {
+                console.error("User camera error:", userCameraErr);
+
+                // Last resort - try with any camera
+                try {
+                    showStatus("Trying with any available camera...", "info");
+                    await html5QrCode.start(
+                        true, // Use any available camera
+                        config,
+                        onScanSuccess,
+                        onScanError
+                    );
+
+                    isScanning = true;
+                    if (scannerPlaceholder) scannerPlaceholder.classList.add('hidden');
+                    if (startButton) startButton.disabled = true;
+                    if (stopButton) stopButton.disabled = false;
+
+                    showStatus("Scanner started with available camera", "success");
+                    return true;
+                } catch (anyCameraErr) {
+                    console.error("Any camera error:", anyCameraErr);
+                    handleStartError(anyCameraErr);
+                    return false;
+                }
+            }
+        }
+    }
+
+    function handleStartError(err) {
+        let errorMessage = "Failed to start scanner: ";
+
+        console.error("Error details:", err);
+
+        // Safe error checking
+        if (!err) {
+            errorMessage += "Unknown error occurred";
+        } else if (err.name === "NotAllowedError") {
+            errorMessage += "Camera permissions denied. Please allow camera access and refresh the page.";
+        } else if (err.name === "NotFoundError") {
+            errorMessage += "No camera found. Please connect a camera and refresh the page.";
+        } else if (err.name === "NotReadableError") {
+            errorMessage += "Camera is in use by another application or not readable.";
+        } else if (err.message && typeof err.message === 'string') {
+            // Only check message properties if it exists and is a string
+            if (err.message.includes('Permission')) {
+                errorMessage += "Camera permissions denied. Please allow camera access.";
+            } else if (err.message.includes('Could not find') || err.message.includes('not be found')) {
+                errorMessage += "No camera found. Please check your camera connection.";
+            } else if (err.message.includes('Could not start')) {
+                errorMessage += "Camera is in use by another application.";
+            } else {
+                // Use message if it exists and is safe
+                errorMessage += err.message;
+            }
+        } else if (err.toString() !== '[object Object]') {
+            // Last resort - try to convert error to string if it's not just [object Object]
+            errorMessage += err.toString();
+        } else {
+            errorMessage += "Check console for error details";
+        }
+
+        showStatus(errorMessage, "error");
+        if (startButton) startButton.disabled = false;
+    }
+
+    // Stop scanner
+    async function stopScanner() {
+        if (!html5QrCode) {
+            showStatus("Scanner not initialized", "error");
+            return false;
+        }
+
+        if (!isScanning) {
+            showStatus("Scanner is not running", "info");
+            return true;
+        }
+
+        try {
+            await html5QrCode.stop();
+            isScanning = false;
+
+            if (scannerPlaceholder) scannerPlaceholder.classList.remove('hidden');
+            if (startButton) startButton.disabled = false;
+            if (stopButton) stopButton.disabled = true;
+
+            showStatus("Scanner stopped", "info");
+            return true;
+        } catch (err) {
+            console.error("Scanner stop error:", err);
+            showStatus("Failed to stop scanner: " + err.message, "error");
+            return false;
+        }
+    }
+
+    // Scan success handler
+    function onScanSuccess(decodedText, decodedResult) {
+        if (currentScanResult === decodedText) return;
+        currentScanResult = decodedText;
+
+        showStatus(`QR Code detected: ${decodedText.substring(0, 20)}...`, "success");
+        processScan(decodedText);
+    }
+
+    // Scan error handler - silent for most errors to avoid console spam
+    function onScanError(errorMessage) {
+        // Only log specific errors or at debug level
+        if (errorMessage.includes('critical')) {
+            console.warn('Scan error:', errorMessage);
+        }
+    }
+
+    // Process scan with server
+    async function processScan(qrData) {
+        try {
+            // Find CSRF token
+            const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfTokenElement) {
+                throw new Error('CSRF token not found. Please refresh the page.');
+            }
+
+            const csrfToken = csrfTokenElement.value;
+            const scanEndpoint = document.querySelector('[data-scan-endpoint]')?.dataset.scanEndpoint || '/scan/';
+
+            showStatus("Processing scan...", "info");
+
+            const response = await fetch(scanEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ qr_code: qrData })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                if (typeof showScanResult === 'function') {
+                    showScanResult(data);
+                }
+
+                if (typeof addRecentScan === 'function') {
+                    addRecentScan(data);
+                }
+
+                showStatus(data.message || "Scan processed successfully", "success");
+            } else {
+                showStatus(data.message || "Error processing scan", "error");
+            }
+        } catch (error) {
+            console.error("Scan processing error:", error);
+            showStatus("Error processing scan: " + error.message, "error");
+        } finally {
+            // Reset current scan result after a delay to allow for re-scanning
+            setTimeout(() => {
+                currentScanResult = null;
+            }, 2000);
+        }
+    }
+
+    // Stub functions if not defined elsewhere
+    if (typeof showScanResult !== 'function') {
+        window.showScanResult = function(data) {
+            console.log("Scan result:", data);
+            // Add your implementation here
+        };
+    }
+
+    if (typeof addRecentScan !== 'function') {
+        window.addRecentScan = function(data) {
+            console.log("Adding to recent scans:", data);
+            // Add your implementation here
+        };
+    }
+
+    // ======================
+    // Event Listeners
+    // ======================
+
+    if (startButton) {
+        startButton.addEventListener('click', async () => {
+            await startScanner();
+        });
+    }
+
+    if (stopButton) {
+        stopButton.addEventListener('click', async () => {
+            await stopScanner();
+        });
+    }
+
+    // ======================
+    // Initialization
+    // ======================
+
+    // Initialize with error handling
+    (async function() {
+        try {
+            const initialized = await initScanner();
+            if (initialized) {
+                showStatus("Scanner ready. Click 'Start Scanner' to begin.", "info");
+            }
+        } catch (err) {
+            console.error("Initialization error:", err);
+            showStatus("Failed to initialize scanner: " + err.message, "error");
+        }
+    })();
+});
+        </script>
+
+</body>
+
+</html>
